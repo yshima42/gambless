@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 // なぜか認識されない。後で直す
-// import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static ThemeData get light => ThemeData(
         useMaterial3: true,
         colorSchemeSeed: const Color(0xFF006E6D),
-        // textTheme: GoogleFonts.nunitoTextTheme(),
+        textTheme: GoogleFonts.nunitoTextTheme(),
         cardTheme: CardTheme(
           elevation: 0,
           shape: RoundedRectangleBorder(
