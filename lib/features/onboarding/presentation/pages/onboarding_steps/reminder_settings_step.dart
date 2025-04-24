@@ -69,6 +69,34 @@ class ReminderSettingsStep extends ConsumerWidget {
       return '$displayHour:$minute $period';
     }
 
+    // おすすめの時間プリセット
+    final List<Map<String, dynamic>> recommendedTimes = [
+      {
+        'time': const TimeOfDay(hour: 7, minute: 30),
+        'label': '朝のルーティン',
+        'description': '朝の習慣形成におすすめ',
+        'icon': Icons.wb_sunny,
+      },
+      {
+        'time': const TimeOfDay(hour: 12, minute: 0),
+        'label': 'ランチタイム',
+        'description': '昼休みの小休憩におすすめ',
+        'icon': Icons.lunch_dining,
+      },
+      {
+        'time': const TimeOfDay(hour: 19, minute: 0),
+        'label': '夜のリラックスタイム',
+        'description': '夜の自己振り返りにおすすめ',
+        'icon': Icons.nightlight_round,
+      },
+      {
+        'time': const TimeOfDay(hour: 21, minute: 30),
+        'label': '就寝前',
+        'description': '睡眠前の落ち着いた時間におすすめ',
+        'icon': Icons.bedtime,
+      },
+    ];
+
     return Scaffold(
       body: Stack(
         children: [
@@ -224,7 +252,135 @@ class ReminderSettingsStep extends ConsumerWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 時間選択ボタン
+                          // ヘッダーテキスト
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(bottom: 16.0, left: 4.0),
+                            child: Text(
+                              'おすすめの時間',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.white.withOpacity(0.9),
+                              ),
+                            ),
+                          ),
+
+                          // おすすめの時間のリスト
+                          ...recommendedTimes.map((timeData) {
+                            final TimeOfDay time = timeData['time'];
+                            final bool isSelected =
+                                onboardingData.reminderTime != null &&
+                                    onboardingData.reminderTime!.hour ==
+                                        time.hour &&
+                                    onboardingData.reminderTime!.minute ==
+                                        time.minute;
+
+                            return InkWell(
+                              onTap: () {
+                                vibrate();
+                                onboardingNotifier.setReminderTime(time);
+                              },
+                              borderRadius: BorderRadius.circular(24),
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).dividerColor,
+                                    width: isSelected ? 2 : 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      timeData['icon'],
+                                      color: isSelected
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                          : Colors.white.withOpacity(0.7),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            timeData['label'],
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 15,
+                                              color: isSelected
+                                                  ? Theme.of(context)
+                                                      .colorScheme
+                                                      .primary
+                                                  : Colors.white,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            timeData['description'],
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color:
+                                                  Colors.white.withOpacity(0.6),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                                .withOpacity(0.2)
+                                            : Colors.grey.shade800,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        _formatTimeOfDay(time),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: isSelected
+                                              ? Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                              : Colors.white.withOpacity(0.8),
+                                        ),
+                                      ),
+                                    ),
+                                    if (isSelected)
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
+                                        child: Icon(
+                                          Icons.check_circle,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          size: 20,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+
+                          const SizedBox(height: 20),
+
+                          // カスタム時間選択ボタン
                           InkWell(
                             onTap: () => _selectTime(context),
                             borderRadius: BorderRadius.circular(24),
@@ -234,10 +390,14 @@ class ReminderSettingsStep extends ConsumerWidget {
                                 color: Theme.of(context).colorScheme.surface,
                                 borderRadius: BorderRadius.circular(24),
                                 border: Border.all(
-                                  color: onboardingData.reminderTime != null
+                                  color: _isCustomTime(
+                                          onboardingData.reminderTime,
+                                          recommendedTimes)
                                       ? Theme.of(context).colorScheme.primary
                                       : Theme.of(context).dividerColor,
-                                  width: onboardingData.reminderTime != null
+                                  width: _isCustomTime(
+                                          onboardingData.reminderTime,
+                                          recommendedTimes)
                                       ? 2
                                       : 1,
                                 ),
@@ -246,7 +406,9 @@ class ReminderSettingsStep extends ConsumerWidget {
                                 children: [
                                   Icon(
                                     Icons.access_time,
-                                    color: onboardingData.reminderTime != null
+                                    color: _isCustomTime(
+                                            onboardingData.reminderTime,
+                                            recommendedTimes)
                                         ? Theme.of(context).colorScheme.primary
                                         : Colors.white.withOpacity(0.7),
                                   ),
@@ -257,21 +419,21 @@ class ReminderSettingsStep extends ConsumerWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Reminder Time',
+                                          'カスタム時間を設定',
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 16,
-                                            color:
-                                                onboardingData.reminderTime !=
-                                                        null
-                                                    ? Theme.of(context)
-                                                        .colorScheme
-                                                        .primary
-                                                    : Colors.white,
+                                            color: _isCustomTime(
+                                                    onboardingData.reminderTime,
+                                                    recommendedTimes)
+                                                ? Theme.of(context)
+                                                    .colorScheme
+                                                    .primary
+                                                : Colors.white,
                                           ),
                                         ),
                                         Text(
-                                          'Set your daily reminder time',
+                                          'あなたに最適な時間を選択してください',
                                           style: TextStyle(
                                             fontSize: 13,
                                             color:
@@ -285,21 +447,50 @@ class ReminderSettingsStep extends ConsumerWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 8),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary
-                                          .withOpacity(0.2),
+                                      color: _isCustomTime(
+                                              onboardingData.reminderTime,
+                                              recommendedTimes)
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                              .withOpacity(0.2)
+                                          : Colors.grey.shade800,
                                       borderRadius: BorderRadius.circular(16),
                                     ),
-                                    child: Text(
-                                      _formatTimeOfDay(
-                                          onboardingData.reminderTime),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                      ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          _isCustomTime(
+                                                  onboardingData.reminderTime,
+                                                  recommendedTimes)
+                                              ? _formatTimeOfDay(
+                                                  onboardingData.reminderTime)
+                                              : '選択',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: _isCustomTime(
+                                                    onboardingData.reminderTime,
+                                                    recommendedTimes)
+                                                ? Theme.of(context)
+                                                    .colorScheme
+                                                    .primary
+                                                : Colors.white.withOpacity(0.7),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Icon(
+                                          Icons.arrow_drop_down,
+                                          color: _isCustomTime(
+                                                  onboardingData.reminderTime,
+                                                  recommendedTimes)
+                                              ? Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                              : Colors.white.withOpacity(0.7),
+                                          size: 18,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -391,5 +582,23 @@ class ReminderSettingsStep extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  // カスタム時間かどうかをチェック
+  bool _isCustomTime(
+      TimeOfDay? selectedTime, List<Map<String, dynamic>> recommendedTimes) {
+    if (selectedTime == null) return false;
+
+    // 推奨時間リストに含まれているかをチェック
+    for (final timeData in recommendedTimes) {
+      final TimeOfDay time = timeData['time'];
+      if (time.hour == selectedTime.hour &&
+          time.minute == selectedTime.minute) {
+        return false;
+      }
+    }
+
+    // リストに含まれていなければカスタム時間
+    return true;
   }
 }
