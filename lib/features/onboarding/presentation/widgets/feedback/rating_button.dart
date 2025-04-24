@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 
 class RatingButton extends StatelessWidget {
   final IconData icon;
@@ -23,10 +24,22 @@ class RatingButton extends StatelessWidget {
     final selectedBackgroundColor =
         primaryColor.withAlpha(51); // 0.2 * 255 = 51
 
+    // バイブレーション関数
+    void vibrate() {
+      try {
+        Vibration.vibrate(duration: 15, amplitude: 180);
+      } catch (e) {
+        // バイブレーションに対応していない場合のエラーハンドリング
+      }
+    }
+
     return Column(
       children: [
         IconButton(
-          onPressed: onPressed,
+          onPressed: () {
+            vibrate(); // タップ時にバイブレーション
+            onPressed();
+          },
           icon: Icon(
             icon,
             color: isSelected ? primaryColor : whiteColor,

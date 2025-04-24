@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/providers/onboarding_provider.dart';
@@ -30,80 +31,49 @@ class PersonalizationStep extends ConsumerWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Name (or Nickname)',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
+              _buildInputLabel('Name (or Nickname)'),
               const SizedBox(height: 8),
-              TextField(
+              _buildInputField(
+                context,
+                initialValue: onboardingData.name,
+                hintText: 'e.g. John',
+                prefixIcon: Icons.person_outline,
                 onChanged: (value) => onboardingNotifier.updateName(value),
-                decoration: InputDecoration(
-                  hintText: 'e.g. John',
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.surface,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
               ),
               const SizedBox(height: 24),
-              Text(
-                'Age',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
+              _buildInputLabel('Age'),
               const SizedBox(height: 8),
-              Container(
-                height: 56,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<int>(
-                    value: onboardingData.age == 0 ? null : onboardingData.age,
-                    hint: Text('Select age',
-                        style: TextStyle(color: Colors.white.withOpacity(0.6))),
-                    dropdownColor: Theme.of(context).colorScheme.surface,
-                    icon: Icon(Icons.arrow_drop_down, color: Colors.white),
-                    isExpanded: true,
-                    items: [
-                      for (int i = 18; i <= 80; i++)
-                        DropdownMenuItem(
-                          value: i,
-                          child: Text(
-                            '$i',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                    ],
-                    onChanged: (value) {
-                      if (value != null) {
-                        onboardingNotifier.updateAge(value);
-                      }
-                    },
-                  ),
-                ),
+              _buildInputField(
+                context,
+                initialValue:
+                    onboardingData.age > 0 ? onboardingData.age.toString() : '',
+                hintText: 'Enter your age (18-80)',
+                prefixIcon: Icons.calendar_today,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(2),
+                ],
+                onChanged: (value) {
+                  if (value.isNotEmpty) {
+                    final age = int.parse(value);
+                    if (age >= 18 && age <= 80) {
+                      onboardingNotifier.updateAge(age);
+                    }
+                  }
+                },
               ),
               const SizedBox(height: 24),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Theme.of(context).dividerColor),
+                  border: Border.all(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.3)),
                 ),
                 child: Row(
                   children: [
@@ -147,7 +117,7 @@ class PersonalizationStep extends ConsumerWidget {
               child: OnboardingButton(
                 text: 'Continue',
                 onPressed:
-                    onboardingData.name.isNotEmpty && onboardingData.age > 0
+                    onboardingData.name.isNotEmpty && onboardingData.age >= 18
                         ? onNext
                         : () {},
               ),
@@ -155,6 +125,101 @@ class PersonalizationStep extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
         ],
+      ),
+    );
+  }
+
+  // 入力ラベルウィジェット
+  Widget _buildInputLabel(String label) {
+    return Row(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(width: 4),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            'Required',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: Colors.white.withOpacity(0.7),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // 入力フィールドウィジェット
+  Widget _buildInputField(
+    BuildContext context, {
+    String? initialValue,
+    required String hintText,
+    required IconData prefixIcon,
+    Function(String)? onChanged,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextFormField(
+        initialValue: initialValue,
+        onChanged: onChanged,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+          filled: true,
+          fillColor: Theme.of(context).colorScheme.surface,
+          prefixIcon: Icon(
+            prefixIcon,
+            color: Colors.white.withOpacity(0.7),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(24),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(24),
+            borderSide: BorderSide(
+              color: Colors.white.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(24),
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
+              width: 2,
+            ),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
+          ),
+        ),
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }

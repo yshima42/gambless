@@ -21,7 +21,17 @@ class OnboardingButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: FilledButton(
-        onPressed: onPressed,
+        onPressed: () {
+          // ボタン押下時にバイブレーション
+          try {
+            // より歯切れの良い短い単一振動
+            Vibration.vibrate(duration: 15, amplitude: 180);
+          } catch (e) {
+            // バイブレーションに対応していない場合のエラーハンドリング
+          }
+
+          onPressed();
+        },
         style: FilledButton.styleFrom(
           backgroundColor: isPrimary
               ? Theme.of(context).colorScheme.primary
@@ -152,6 +162,14 @@ class OnboardingOptionCard extends StatelessWidget {
           : Theme.of(context).colorScheme.surface,
       child: InkWell(
         onTap: () {
+          // タップ時にバイブレーション
+          try {
+            // より歯切れの良い短い単一振動
+            Vibration.vibrate(duration: 10, amplitude: 150);
+          } catch (e) {
+            // バイブレーションに対応していない場合のエラーハンドリング
+          }
+
           onTap();
           // Auto-navigate to next step after selection if enabled
           if (autoNavigate && onNext != null) {
@@ -486,26 +504,90 @@ class _OnboardingAnalysisIndicatorState
             ),
             const SizedBox(height: 40),
 
-            // 進行状況の表示（円形プログレスインジケーターとパーセント）
-            Stack(
-              alignment: Alignment.center,
+            // 進行状況の表示（角丸のグラデーションインジケーター）
+            Column(
               children: [
-                SizedBox(
-                  width: 180,
-                  height: 180,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 10,
-                    value: _progressAnimation.value,
-                    color: Theme.of(context).colorScheme.primary,
-                    backgroundColor: Colors.grey.shade800,
-                  ),
-                ),
-                Text(
-                  '$_progressPercent%',
-                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // 外側の円形コンテナ
+                    Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey.shade900,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 15,
+                            spreadRadius: 5,
+                          ),
+                        ],
                       ),
+                    ),
+                    // 進行状況インジケーター
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 160,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.grey.shade800,
+                            border: Border.all(
+                              color: Colors.grey.shade700,
+                              width: 1,
+                            ),
+                          ),
+                          child: Stack(
+                            children: [
+                              // プログレスバー
+                              FractionallySizedBox(
+                                widthFactor: _progressAnimation.value,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        const Color(0xFF4CAF50)
+                                            .withOpacity(0.7), // ライトグリーン
+                                        const Color(0xFF2E7D32), // メインのグリーン
+                                        const Color(0xFF1B5E20), // ダークグリーン
+                                      ],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xFF4CAF50)
+                                            .withOpacity(0.5),
+                                        blurRadius: 8,
+                                        spreadRadius: -2,
+                                        offset: const Offset(0, 0),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          '$_progressPercent%',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
