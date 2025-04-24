@@ -11,7 +11,7 @@ class GamblessApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = AppRouter.router;
+    final router = ref.watch(routerProvider);
     return MaterialApp.router(
       title: 'Gambless',
       theme: AppTheme.light,
