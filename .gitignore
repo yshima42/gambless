@@ -49,3 +49,6 @@ android/app/.cxx/**
 
 # workspace
 *.code-workspace
+
+# env
+env/*
