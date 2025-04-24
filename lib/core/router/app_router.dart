@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/tracker/presentation/pages/tracker_page.dart';
 import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
+import '../../features/tracker/presentation/pages/tracker_page.dart';
 
 class AppRouter {
   static final router = GoRouter(
