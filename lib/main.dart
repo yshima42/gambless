@@ -9,9 +9,6 @@ import 'features/onboarding/data/providers/onboarding_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // iOSの場合はバイブレーションを許可
-  await SystemChannels.platform.invokeMethod<void>('HapticFeedback.vibrate');
-
   runApp(
     const ProviderScope(
       child: GamblessApp(),
