@@ -46,3 +46,6 @@ app.*.map.json
 
 # .cxx
 android/app/.cxx/**
+
+# workspace
+*.code-workspace
