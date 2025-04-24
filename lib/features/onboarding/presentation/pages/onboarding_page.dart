@@ -162,19 +162,22 @@ class OnboardingPage extends ConsumerWidget {
               children: [
                 // Top bar with back button and progress
                 if (currentStep > 0 && showProgressBar)
-                  Container(
-                    height: 48,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Row(
-                      children: [
-                        widgets.BackButton(onPressed: goToPreviousStep),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Container(
+                      height: 48,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          // 戻るボタン
+                          BackButton(onPressed: goToPreviousStep),
+                          const SizedBox(width: 16),
+                          // プログレスバー
+                          Expanded(
                             child: widgets.OnboardingProgressBar(),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
 
