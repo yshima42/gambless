@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class DayData {
   final DateTime date;
   final int moodLevel; // 0 to 4 where 0 is bad, 4 is good
