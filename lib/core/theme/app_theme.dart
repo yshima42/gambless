@@ -3,6 +3,95 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
+  // Light theme with modern look
+  static ThemeData get light => ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.light,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF006E6D),
+          brightness: Brightness.light,
+        ),
+        scaffoldBackgroundColor: Colors.white,
+        textTheme: GoogleFonts.nunitoTextTheme(),
+        cardTheme: CardTheme(
+          color: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+            side: BorderSide(
+              color: Colors.grey.shade200,
+              width: 1,
+            ),
+          ),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 0,
+        ),
+        buttonTheme: ButtonThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+          ),
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.grey.shade50,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(24),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(24),
+            borderSide: BorderSide(
+              color: const Color(0xFF006E6D),
+              width: 2,
+            ),
+          ),
+        ),
+        dividerTheme: DividerThemeData(
+          color: Colors.grey.shade200,
+        ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Colors.white,
+          selectedItemColor: Color(0xFF006E6D),
+          unselectedItemColor: Colors.grey,
+        ),
+        switchTheme: SwitchThemeData(
+          thumbColor: WidgetStateProperty.resolveWith<Color>(
+            (Set<WidgetState> states) {
+              if (states.contains(WidgetState.selected)) {
+                return const Color(0xFF006E6D);
+              }
+              return Colors.grey;
+            },
+          ),
+          trackColor: WidgetStateProperty.resolveWith<Color>(
+            (Set<WidgetState> states) {
+              if (states.contains(WidgetState.selected)) {
+                return const Color(0xFF006E6D).withOpacity(0.5);
+              }
+              return Colors.grey.withOpacity(0.3);
+            },
+          ),
+        ),
+      );
+
   // Dark theme with modern look
   static ThemeData get dark => ThemeData(
         useMaterial3: true,
@@ -17,11 +106,7 @@ class AppTheme {
           onSurface: Colors.white,
         ),
         scaffoldBackgroundColor: const Color(0xFF121212),
-        textTheme:
-            GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme).apply(
-          bodyColor: Colors.white,
-          displayColor: Colors.white,
-        ),
+        textTheme: GoogleFonts.nunitoTextTheme(ThemeData.dark().textTheme),
         cardTheme: CardTheme(
           color: const Color(0xFF1E1E2E),
           elevation: 0,
@@ -110,7 +195,4 @@ class AppTheme {
           ),
         ),
       );
-
-  // Keeping the light theme reference for backward compatibility
-  static ThemeData get light => dark;
 }

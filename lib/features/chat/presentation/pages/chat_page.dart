@@ -71,6 +71,9 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('AI Chat'),
@@ -103,7 +106,7 @@ class _ChatPageState extends State<ChatPage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
+                color: theme.colorScheme.surface,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
@@ -119,17 +122,27 @@ class _ChatPageState extends State<ChatPage> {
                       controller: _messageController,
                       decoration: InputDecoration(
                         hintText: 'メッセージを入力...',
+                        hintStyle: TextStyle(
+                          color: isDark
+                              ? Colors.grey.shade400
+                              : Colors.grey.shade600,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
                           borderSide: BorderSide.none,
                         ),
                         filled: true,
-                        fillColor: Theme.of(context).colorScheme.surface,
+                        fillColor: isDark
+                            ? theme.colorScheme.surface
+                            : Colors.grey.shade100,
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 10,
                         ),
                         isDense: true,
+                      ),
+                      style: TextStyle(
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                       onSubmitted: (_) => _sendMessage(),
                     ),
@@ -137,7 +150,7 @@ class _ChatPageState extends State<ChatPage> {
                   const SizedBox(width: 8),
                   Container(
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: theme.colorScheme.primary,
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
@@ -170,6 +183,9 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -178,15 +194,15 @@ class _ChatPageState extends State<ChatPage> {
             Icon(
               Icons.chat_bubble_outline,
               size: 64,
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+              color: theme.colorScheme.primary.withOpacity(0.3),
             ),
             const SizedBox(height: 16),
             Text(
               'AI Chat Support',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.primary,
+              ),
             ),
             const SizedBox(height: 8),
             Padding(
@@ -195,7 +211,7 @@ class _ChatPageState extends State<ChatPage> {
                 'メッセージを入力してサポートを受けましょう',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.grey.shade600,
+                  color: isDark ? Colors.grey.shade600 : Colors.grey.shade700,
                   fontSize: 14,
                 ),
               ),
@@ -222,6 +238,9 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildSuggestionChip(BuildContext context, String text) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return InkWell(
       onTap: () {
         _messageController.text = text;
@@ -231,17 +250,17 @@ class _ChatPageState extends State<ChatPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Colors.grey.shade300,
+            color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
             width: 1,
           ),
         ),
         child: Text(
           text,
           style: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
+            color: theme.colorScheme.primary,
             fontSize: 14,
           ),
         ),
@@ -250,6 +269,9 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildMessageBubble(ChatMessage message) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Align(
       alignment: message.isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -257,14 +279,20 @@ class _ChatPageState extends State<ChatPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
           color: message.isUser
-              ? Theme.of(context).colorScheme.primary
-              : Colors.grey.shade100,
+              ? theme.colorScheme.primary
+              : isDark
+                  ? Colors.grey.shade800
+                  : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           message.content,
           style: TextStyle(
-            color: message.isUser ? Colors.white : Colors.black87,
+            color: message.isUser
+                ? Colors.white
+                : isDark
+                    ? Colors.white
+                    : Colors.black87,
           ),
         ),
       ),
