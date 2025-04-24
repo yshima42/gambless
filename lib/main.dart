@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -9,12 +8,13 @@ import 'core/theme/app_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // .envファイルを読み込む
-  await dotenv.load(fileName: 'env/.env');
+  const url = String.fromEnvironment('SUPABASE_URL', defaultValue: 'a');
+  const anonKey =
+      String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: 'a');
 
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL'] ?? '',
-    anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
+    url: url,
+    anonKey: anonKey,
   );
 
   runApp(const ProviderScope(child: GamblessApp()));

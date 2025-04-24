@@ -51,4 +51,4 @@ android/app/.cxx/**
 *.code-workspace
 
 # env
-env/*
+dart_defines/*
