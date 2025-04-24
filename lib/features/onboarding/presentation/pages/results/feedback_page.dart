@@ -24,7 +24,7 @@ class FeedbackPage extends ConsumerWidget {
                 colors: [
                   const Color(0xFF121212),
                   const Color(0xFF1E1E2E),
-                  Theme.of(context).colorScheme.background,
+                  Theme.of(context).colorScheme.surface,
                 ],
               ),
             ),
