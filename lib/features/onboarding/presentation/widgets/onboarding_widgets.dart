@@ -51,8 +51,13 @@ class OnboardingProgressBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentStep = ref.watch(onboardingStepProvider);
-    final totalSteps = ref.watch(onboardingTotalStepsProvider);
-    final progress = (currentStep / totalSteps).clamp(0.0, 1.0);
+    final questionSteps = ref.watch(onboardingQuestionStepsProvider);
+
+    // 現在のステップが質問ステップ数を超えている場合は、進捗を100%とする
+    // そうでなければ、現在のステップ / 質問ステップ数（+1 for Analysis）として計算
+    final progress = currentStep > questionSteps
+        ? 1.0
+        : (currentStep / (questionSteps + 1)).clamp(0.0, 1.0);
 
     return LinearProgressIndicator(
       value: progress,

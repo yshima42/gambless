@@ -60,7 +60,7 @@ class GamblingStartTimeStep extends ConsumerWidget {
                         'The duration of your gambling habits is an important indicator in the recovery process. The longer the habit, the deeper it is rooted in the brain\'s reward system.',
                         style: TextStyle(
                           fontSize: 13,
-                          color: Colors.white.withOpacity(0.7),
+                          color: Colors.white.withValues(alpha: .7),
                         ),
                       ),
                     ],

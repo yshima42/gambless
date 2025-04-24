@@ -86,7 +86,7 @@ final onboardingProvider =
 final onboardingStepProvider = StateProvider<int>((ref) => 0);
 
 // オンボーディングの総ステップ数
-final onboardingTotalStepsProvider = Provider<int>((ref) => 14);
+final onboardingTotalStepsProvider = Provider<int>((ref) => 10);
 
 // オンボーディングの質問部分のステップ数 (Question #1-#9)
 final onboardingQuestionStepsProvider = Provider<int>((ref) => 9);
