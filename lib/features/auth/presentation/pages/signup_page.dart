@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class SignupPage extends ConsumerWidget {
   final VoidCallback onComplete;
 
-  const SignupPage({super.key, required this.onComplete});
+  const SignupPage({Key? key, required this.onComplete}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,67 +21,71 @@ class SignupPage extends ConsumerWidget {
                 colors: [
                   const Color(0xFF121212),
                   const Color(0xFF1E1E2E),
-                  Theme.of(context).colorScheme.surface,
+                  Theme.of(context).colorScheme.surface, // Bright blue
                 ],
               ),
             ),
           ),
 
-          // Content
+          // Main content
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 30),
+                  // Optional logo placeholder
+                  // Replace with your Gambless logo asset
+                  // Image.asset('assets/images/gambless_logo.png', height: 80),
+
+                  const SizedBox(height: 16),
                   Text(
-                    'アカウントを作成',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+                    'Be a Gambless',
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                           color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'サインアップして、あなた専用の回復プログラムを開始しましょう',
+                    'Become a gamble free and regain control of your life',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Colors.white.withOpacity(0.7),
+                          color: Colors.white70,
                         ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 40),
 
-                  // Social login buttons
-                  _SocialSignInButton(
-                    text: 'Googleでサインアップ',
-                    icon: 'assets/images/google_logo.png',
+                  // Social sign-in buttons
+                  SocialSignInButton(
+                    text: 'Continue with Google',
+                    icon: Icons.g_mobiledata,
                     backgroundColor: Colors.white,
                     textColor: Colors.black87,
                     onPressed: () => _signInWithGoogle(context),
                   ),
                   const SizedBox(height: 16),
-                  _SocialSignInButton(
-                    text: 'Appleでサインアップ',
-                    icon: 'assets/images/apple_logo.png',
+                  SocialSignInButton(
+                    text: 'Continue with Apple',
+                    icon: Icons.apple,
                     backgroundColor: Colors.black,
                     textColor: Colors.white,
                     onPressed: () => _signInWithApple(context),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 32),
 
-                  // Skip for now option
+                  // Skip option
                   TextButton(
                     onPressed: () {
-                      // Skip account creation for now
                       onComplete();
                       context.pop();
                     },
                     child: Text(
-                      'あとでサインアップ',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
+                      'Skip for now',
+                      style: const TextStyle(
+                        color: Colors.white,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -95,16 +99,14 @@ class SignupPage extends ConsumerWidget {
           Positioned(
             top: 40,
             left: 16,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context),
-              color: Colors.white,
-              style: IconButton.styleFrom(
-                backgroundColor: Colors.black26,
-                padding: const EdgeInsets.all(12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
+            child: CircleAvatar(
+              backgroundColor: Colors.black26,
+              child: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
                 ),
+                onPressed: () => Navigator.of(context).pop(),
               ),
             ),
           ),
@@ -113,47 +115,45 @@ class SignupPage extends ConsumerWidget {
     );
   }
 
-  // ダミー実装: 実際の実装ではFirebaseAuthの設定が必要
+  // Dummy implementations -- replace with real auth logic
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
-      // デモ目的で単純なディレイを入れる
       await Future.delayed(const Duration(seconds: 1));
       onComplete();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Google サインインに失敗しました: $e')),
+        SnackBar(content: Text('Google sign-in failed: $e')),
       );
     }
   }
 
-  // ダミー実装: 実際の実装ではFirebaseAuthの設定が必要
   Future<void> _signInWithApple(BuildContext context) async {
     try {
-      // デモ目的で単純なディレイを入れる
       await Future.delayed(const Duration(seconds: 1));
       onComplete();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Apple サインインに失敗しました: $e')),
+        SnackBar(content: Text('Apple sign-in failed: $e')),
       );
     }
   }
 }
 
-class _SocialSignInButton extends StatelessWidget {
+class SocialSignInButton extends StatelessWidget {
   final String text;
-  final String icon;
+  final IconData icon;
   final Color backgroundColor;
   final Color textColor;
   final VoidCallback onPressed;
 
-  const _SocialSignInButton({
+  const SocialSignInButton({
+    Key? key,
     required this.text,
     required this.icon,
     required this.backgroundColor,
     required this.textColor,
     required this.onPressed,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -172,12 +172,7 @@ class _SocialSignInButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // アイコンはダミーなので、代わりにマテリアルアイコンを使用
-            Icon(
-              text.contains('Google') ? Icons.golf_course : Icons.apple,
-              size: 24,
-              color: textColor,
-            ),
+            Icon(icon, size: 24, color: textColor),
             const SizedBox(width: 12),
             Text(
               text,
