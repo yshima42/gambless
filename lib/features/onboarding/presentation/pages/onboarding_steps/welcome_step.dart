@@ -24,7 +24,7 @@ class WelcomeStep extends ConsumerWidget {
           ),
           const SizedBox(height: 40),
           Text(
-            'Gambless',
+            'Welcome!',
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
