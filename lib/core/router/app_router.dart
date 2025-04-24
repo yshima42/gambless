@@ -21,9 +21,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
 
       // オンボーディングが完了していない場合は、オンボーディングページにリダイレクト
+      // ただし、チャットページへのアクセスは許可
       if (!isOnboardingCompleted &&
           state.fullPath != '/onboarding' &&
-          state.fullPath != '/welcome') {
+          state.fullPath != '/welcome' &&
+          state.fullPath != '/chat') {
         return '/onboarding';
       }
 

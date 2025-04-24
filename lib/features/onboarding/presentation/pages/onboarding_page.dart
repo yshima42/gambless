@@ -73,7 +73,7 @@ class OnboardingPage extends ConsumerWidget {
         }
       } else {
         onboardingNotifier.completeOnboarding();
-        context.go('/');
+        context.goNamed('tracker');
       }
     }
 

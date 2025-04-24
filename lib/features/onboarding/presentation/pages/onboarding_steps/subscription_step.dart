@@ -200,7 +200,7 @@ class SubscriptionStep extends ConsumerWidget {
                         onPressed: () {
                           // オンボーディングを完了して、ホーム画面に遷移
                           onboardingNotifier.completeOnboarding();
-                          context.go('/');
+                          context.goNamed('tracker');
                         },
                         style: FilledButton.styleFrom(
                           backgroundColor:

@@ -17,7 +17,7 @@ class _WelcomePageState extends State<WelcomePage> {
     // アニメーション完了後に自動遷移（約3秒後）
     Future.delayed(const Duration(milliseconds: 3000), () {
       if (mounted) {
-        context.go('/');
+        context.goNamed('tracker');
       }
     });
   }

@@ -136,7 +136,7 @@ class FeedbackPage extends ConsumerWidget {
                                         onNext: () {
                                           // すべてのステップが完了したらオンボーディングを完了
                                           onComplete();
-                                          context.go('/');
+                                          context.goNamed('tracker');
                                         },
                                       ),
                                     ),

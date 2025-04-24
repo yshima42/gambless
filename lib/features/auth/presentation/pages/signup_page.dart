@@ -106,7 +106,7 @@ class SignupPage extends ConsumerWidget {
                   Icons.arrow_back,
                   color: Colors.white,
                 ),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => context.pop(),
               ),
             ),
           ),
