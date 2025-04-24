@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/onboarding/data/providers/onboarding_provider.dart';
@@ -8,7 +9,10 @@ import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/tracker/presentation/pages/tracker_page.dart';
 import '../../features/welcome/presentation/pages/welcome_page.dart';
 
-final routerProvider = Provider<GoRouter>((ref) {
+part 'app_router.g.dart';
+
+@riverpod
+GoRouter router(Ref ref) {
   final isOnboardingCompleted = ref.watch(isOnboardingCompletedProvider);
 
   return GoRouter(
@@ -64,7 +68,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ],
   );
-});
+}
 
 class AppRouter {
   static final router = GoRouter(
