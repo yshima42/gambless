@@ -1,10 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart' show TimeOfDay;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/models/onboarding_model.dart';
 
-class OnboardingNotifier extends StateNotifier<OnboardingData> {
-  OnboardingNotifier() : super(OnboardingData());
+part 'onboarding_provider.g.dart';
+
+@riverpod
+class Onboarding extends _$Onboarding {
+  @override
+  OnboardingData build() {
+    return OnboardingData();
+  }
 
   void updateName(String name) {
     state = state.copyWith(name: name);
@@ -69,7 +76,6 @@ class OnboardingNotifier extends StateNotifier<OnboardingData> {
     state = state.copyWith(wantsDailyReminders: wantsDailyReminders);
   }
 
-  // リマインダー時間を設定するメソッド
   void setReminderTime(TimeOfDay time) {
     state = state.copyWith(reminderTime: time);
   }
@@ -83,31 +89,64 @@ class OnboardingNotifier extends StateNotifier<OnboardingData> {
   }
 }
 
-final onboardingProvider =
-    StateNotifierProvider<OnboardingNotifier, OnboardingData>((ref) {
-  return OnboardingNotifier();
-});
-
 // 現在のオンボーディングステップを管理するプロバイダー
-final onboardingStepProvider = StateProvider<int>((ref) => 0);
+@riverpod
+class OnboardingStep extends _$OnboardingStep {
+  @override
+  int build() {
+    return 0;
+  }
+
+  void set(int step) {
+    state = step;
+  }
+
+  void increment() {
+    state++;
+  }
+
+  void decrement() {
+    if (state > 0) {
+      state--;
+    }
+  }
+}
 
 // オンボーディングの総ステップ数
-final onboardingTotalStepsProvider = Provider<int>((ref) => 10);
+@riverpod
+int onboardingTotalSteps(Ref ref) {
+  return 10;
+}
 
 // オンボーディングの質問部分のステップ数 (Question #1-#9)
-final onboardingQuestionStepsProvider = Provider<int>((ref) => 9);
+@riverpod
+int onboardingQuestionSteps(Ref ref) {
+  return 9;
+}
 
 // オンボーディングが質問段階を完了しているかどうかを確認するプロバイダー
-final isOnboardingQuestionsCompletedProvider = Provider<bool>((ref) {
+@riverpod
+bool isOnboardingQuestionsCompleted(Ref ref) {
   final currentStep = ref.watch(onboardingStepProvider);
   final questionSteps = ref.watch(onboardingQuestionStepsProvider);
   return currentStep > questionSteps;
-});
+}
 
 // オンボーディングフェーズを管理するプロバイダー（0: 質問フェーズ、1: 分析中、2: 結果フェーズ）
-final onboardingPhaseProvider = StateProvider<int>((ref) => 0);
+@riverpod
+class OnboardingPhase extends _$OnboardingPhase {
+  @override
+  int build() {
+    return 0;
+  }
+
+  void set(int phase) {
+    state = phase;
+  }
+}
 
 // オンボーディングが完了しているかどうかを確認するプロバイダー
-final isOnboardingCompletedProvider = Provider<bool>((ref) {
+@riverpod
+bool isOnboardingCompleted(Ref ref) {
   return ref.watch(onboardingProvider).hasCompletedOnboarding;
-});
+}

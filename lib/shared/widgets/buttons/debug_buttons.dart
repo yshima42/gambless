@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/router/app_router.dart';
-import '../../../core/theme/theme_provider.dart';
+import '../../../core/theme/theme_provider.dart' as theme_provider;
 import '../../../features/onboarding/data/providers/onboarding_provider.dart';
 import 'theme_toggle_button.dart';
 
@@ -14,6 +14,13 @@ class DebugButtons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    // ボタンの背景色をモードに応じて調整
+    final buttonColor = isDark ? Colors.black45 : Colors.white.withOpacity(0.7);
+    // アイコンの色をモードに応じて調整
+    final iconColor = isDark ? Colors.white : theme.colorScheme.primary;
 
     return Positioned(
       left: 16,
@@ -27,7 +34,7 @@ class DebugButtons extends ConsumerWidget {
             FloatingActionButton(
               mini: true,
               heroTag: 'ai_chat',
-              backgroundColor: Colors.black45,
+              backgroundColor: buttonColor,
               onPressed: () {
                 // オンボーディングが完了していない場合は完了状態にする
                 final isOnboardingCompleted =
@@ -40,9 +47,9 @@ class DebugButtons extends ConsumerWidget {
                 // チャットページに遷移（名前付きルートを使用）
                 router.goNamed('chat');
               },
-              child: const Icon(
+              child: Icon(
                 Icons.chat_outlined,
-                color: Colors.white,
+                color: iconColor,
               ),
             ),
             const SizedBox(height: 8),
@@ -50,9 +57,9 @@ class DebugButtons extends ConsumerWidget {
             FloatingActionButton(
               mini: true,
               heroTag: 'theme',
-              backgroundColor: Colors.black45,
+              backgroundColor: buttonColor,
               onPressed: () {
-                ref.read(themeProvider.notifier).toggleTheme();
+                ref.read(theme_provider.themeProvider.notifier).toggleTheme();
                 HapticFeedback.mediumImpact();
               },
               child: const ThemeToggleButton(),
@@ -62,8 +69,8 @@ class DebugButtons extends ConsumerWidget {
             FloatingActionButton(
               mini: true,
               heroTag: 'debug',
-              backgroundColor: Colors.black45,
-              child: const Icon(Icons.bug_report, color: Colors.white),
+              backgroundColor: buttonColor,
+              child: Icon(Icons.bug_report, color: iconColor),
               onPressed: () {
                 // オンボーディングをリセットしてオンボーディングページに移動
                 final onboardingNotifier =
