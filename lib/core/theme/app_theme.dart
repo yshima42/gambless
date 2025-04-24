@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// なぜか認識されない。後で直す
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
