@@ -21,7 +21,7 @@ class GradientBackground extends StatelessWidget {
               colors: [
                 darkColor1,
                 darkColor2,
-                colorScheme.background,
+                colorScheme.surface,
               ],
             ),
           ),

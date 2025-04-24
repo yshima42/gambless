@@ -26,7 +26,7 @@ class ReminderSettingsStep extends ConsumerWidget {
     }
 
     // 時間選択ダイアログを表示する関数
-    Future<void> _selectTime(BuildContext context) async {
+    Future<void> selectTime(BuildContext context) async {
       vibrate(); // タップ時にバイブレーション
 
       // デフォルト時間を設定（現在の設定値またはデフォルト値）
@@ -58,7 +58,7 @@ class ReminderSettingsStep extends ConsumerWidget {
     }
 
     // 分かりやすい時刻表示
-    String _formatTimeOfDay(TimeOfDay? time) {
+    String formatTimeOfDay(TimeOfDay? time) {
       if (time == null) return '時間を選択';
 
       final hour = time.hour;
@@ -109,7 +109,7 @@ class ReminderSettingsStep extends ConsumerWidget {
                 colors: [
                   const Color(0xFF121212),
                   const Color(0xFF1E1E2E),
-                  Theme.of(context).colorScheme.background,
+                  Theme.of(context).colorScheme.surface,
                 ],
               ),
             ),
@@ -348,7 +348,7 @@ class ReminderSettingsStep extends ConsumerWidget {
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Text(
-                                        _formatTimeOfDay(time),
+                                        formatTimeOfDay(time),
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14,
@@ -376,13 +376,13 @@ class ReminderSettingsStep extends ConsumerWidget {
                                 ),
                               ),
                             );
-                          }).toList(),
+                          }),
 
                           const SizedBox(height: 20),
 
                           // カスタム時間選択ボタン
                           InkWell(
-                            onTap: () => _selectTime(context),
+                            onTap: () => selectTime(context),
                             borderRadius: BorderRadius.circular(24),
                             child: Container(
                               padding: const EdgeInsets.all(16),
@@ -464,7 +464,7 @@ class ReminderSettingsStep extends ConsumerWidget {
                                           _isCustomTime(
                                                   onboardingData.reminderTime,
                                                   recommendedTimes)
-                                              ? _formatTimeOfDay(
+                                              ? formatTimeOfDay(
                                                   onboardingData.reminderTime)
                                               : '選択',
                                           style: TextStyle(
