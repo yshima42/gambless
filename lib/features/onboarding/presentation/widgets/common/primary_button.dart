@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String text;
@@ -18,8 +19,22 @@ class PrimaryButton extends StatelessWidget {
     final primaryColor = colorScheme.primary;
     final disabledColor = primaryColor.withAlpha(77); // 0.3 * 255 = 76.5 ≈ 77
 
+    // バイブレーション関数
+    void vibrate() {
+      try {
+        Vibration.vibrate(duration: 15, amplitude: 180);
+      } catch (e) {
+        // バイブレーションに対応していない場合のエラーハンドリング
+      }
+    }
+
     final Widget button = FilledButton(
-      onPressed: onPressed,
+      onPressed: onPressed == null
+          ? null
+          : () {
+              vibrate(); // タップ時にバイブレーション
+              onPressed!();
+            },
       style: FilledButton.styleFrom(
         backgroundColor: primaryColor,
         disabledBackgroundColor: disabledColor,

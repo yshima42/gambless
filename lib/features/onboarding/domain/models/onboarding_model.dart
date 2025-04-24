@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart' show TimeOfDay;
+
 class OnboardingData {
   final String name;
   final int age;
@@ -10,6 +12,7 @@ class OnboardingData {
   final List<GamblingTrigger> gamblingTriggers;
   final List<RecoveryGoal> recoveryGoals;
   final bool wantsDailyReminders;
+  final TimeOfDay? reminderTime;
   final bool hasCompletedOnboarding;
 
   OnboardingData({
@@ -24,6 +27,7 @@ class OnboardingData {
     this.gamblingTriggers = const [],
     this.recoveryGoals = const [],
     this.wantsDailyReminders = true,
+    this.reminderTime,
     this.hasCompletedOnboarding = false,
   });
 
@@ -39,6 +43,7 @@ class OnboardingData {
     List<GamblingTrigger>? gamblingTriggers,
     List<RecoveryGoal>? recoveryGoals,
     bool? wantsDailyReminders,
+    TimeOfDay? reminderTime,
     bool? hasCompletedOnboarding,
   }) {
     return OnboardingData(
@@ -53,6 +58,7 @@ class OnboardingData {
       gamblingTriggers: gamblingTriggers ?? this.gamblingTriggers,
       recoveryGoals: recoveryGoals ?? this.recoveryGoals,
       wantsDailyReminders: wantsDailyReminders ?? this.wantsDailyReminders,
+      reminderTime: reminderTime ?? this.reminderTime,
       hasCompletedOnboarding:
           hasCompletedOnboarding ?? this.hasCompletedOnboarding,
     );

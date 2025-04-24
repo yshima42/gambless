@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart' show TimeOfDay;
 
 import '../../domain/models/onboarding_model.dart';
 
@@ -66,6 +67,11 @@ class OnboardingNotifier extends StateNotifier<OnboardingData> {
 
   void setDailyReminders(bool wantsDailyReminders) {
     state = state.copyWith(wantsDailyReminders: wantsDailyReminders);
+  }
+
+  // リマインダー時間を設定するメソッド
+  void setReminderTime(TimeOfDay time) {
+    state = state.copyWith(reminderTime: time);
   }
 
   void completeOnboarding() {
