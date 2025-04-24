@@ -47,8 +47,8 @@ class _ChatPageState extends State<ChatPage> {
     _messageController.clear();
 
     try {
-      final response = await _chatRepository.sendMessage(message);
-      logger.i('AI Response: $response'); // デバッグ用ログ出力
+      final response = await _chatRepository.sendMessage(message, _messages);
+      logger.i('AI Response: $response');
 
       setState(() {
         _messages.add(ChatMessage(
@@ -58,7 +58,7 @@ class _ChatPageState extends State<ChatPage> {
         ));
       });
     } catch (e) {
-      logger.e('Error: $e'); // エラーログ
+      logger.e('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('メッセージの送信に失敗しました: $e')),
       );

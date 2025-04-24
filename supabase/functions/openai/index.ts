@@ -7,7 +7,7 @@ import OpenAI from "https://deno.land/x/openai@v4.24.0/mod.ts";
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 Deno.serve(async (req) => {
-  const { query } = await req.json();
+  const { messages } = await req.json();
   const apiKey = Deno.env.get("OPENAI_API_KEY");
   const openai = new OpenAI({
     apiKey: apiKey,
@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
 
   // Documentation here: https://github.com/openai/openai-node
   const chatCompletion = await openai.chat.completions.create({
-    messages: [{ role: "user", content: query }],
+    messages: messages,
     // Choose model from here: https://platform.openai.com/docs/models
     model: "gpt-3.5-turbo",
     stream: false,
