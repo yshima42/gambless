@@ -387,21 +387,35 @@ class _OnboardingAnalysisIndicatorState
       ),
     );
 
+    // 前回のバイブレーションタイミングを記録
+    double lastVibrationValue = 0.0;
+
     _progressAnimation.addListener(() {
       setState(() {
         _progressPercent = (_progressAnimation.value * 100).round();
       });
 
-      // Calculate完了時にバイブレーション
-      if (_progressPercent == 100) {
-        _vibrate();
+      // ダイヤルを回す感覚のバイブレーション
+      // 進行度が5%増えるごとにバイブレーション
+      double currentValue = _progressAnimation.value;
+      if (currentValue - lastVibrationValue >= 0.05) {
+        lastVibrationValue = currentValue;
+
+        // 進行度に応じて強度と間隔を調整
+        int baseAmplitude = (currentValue * 200).round().clamp(40, 200);
+        _vibrateWithDialPattern(baseAmplitude);
       }
     });
 
     _animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
+        // 最後に強めのバイブレーションでフィードバック
+        _vibrateWithCompletionPattern();
+
         // アニメーションが完了したら次へ進む
-        widget.onNext();
+        Future.delayed(const Duration(milliseconds: 500), () {
+          widget.onNext();
+        });
       }
     });
 
@@ -409,10 +423,41 @@ class _OnboardingAnalysisIndicatorState
     _animationController.forward();
   }
 
-  // バイブレーション機能
-  void _vibrate() {
+  // ダイヤル回転感覚のバイブレーション機能
+  void _vibrateWithDialPattern(int amplitude) {
     try {
-      Vibration.vibrate(duration: 300, amplitude: 128);
+      // 短いバイブレーションを3回連続で実行し、ダイヤルのカチカチ感を再現
+      List<int> pattern = [
+        0,
+        20,
+        30,
+        20,
+        30,
+        20
+      ]; // ミリ秒単位: [待機, 振動, 待機, 振動, 待機, 振動]
+      List<int> intensities = [
+        0,
+        amplitude,
+        0,
+        amplitude,
+        0,
+        amplitude
+      ]; // 強度: [0, 強度, 0, 強度, 0, 強度]
+
+      Vibration.vibrate(pattern: pattern, intensities: intensities);
+    } catch (e) {
+      // バイブレーションに対応していない場合のエラーハンドリング
+    }
+  }
+
+  // 完了時の特別なバイブレーションパターン
+  void _vibrateWithCompletionPattern() {
+    try {
+      // 完了時は「ダイヤルがロックされた」感覚を再現
+      List<int> pattern = [0, 40, 30, 80, 40, 120]; // [待機, 振動, 待機, 振動, 待機, 振動]
+      List<int> intensities = [0, 120, 0, 160, 0, 200]; // 強度が徐々に上がる
+
+      Vibration.vibrate(pattern: pattern, intensities: intensities);
     } catch (e) {
       // バイブレーションに対応していない場合のエラーハンドリング
     }
