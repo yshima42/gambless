@@ -176,8 +176,8 @@ class TrackerPage extends ConsumerWidget {
 
                 // Weekly Tracking card with actual data
                 Consumer(builder: (context, ref, _) {
-                  final weeklyData =
-                      ref.watch(weeklyDataProvider(2)); // Show last 2 weeks
+                  // final weeklyData =
+                  //     ref.watch(weeklyDataProvider(2)); // Show last 2 weeks
 
                   return Card(
                     child: Padding(
@@ -251,19 +251,22 @@ class TrackerPage extends ConsumerWidget {
                                                       ? Theme.of(context)
                                                           .colorScheme
                                                           .primary
-                                                          .withOpacity(0.15)
+                                                          .withValues(
+                                                              alpha: 0.15)
                                                       : moodLevel == 2
                                                           ? Theme.of(context)
                                                               .colorScheme
                                                               .primary
-                                                              .withOpacity(0.4)
+                                                              .withValues(
+                                                                  alpha: 0.4)
                                                           : moodLevel == 3
                                                               ? Theme.of(
                                                                       context)
                                                                   .colorScheme
                                                                   .primary
-                                                                  .withOpacity(
-                                                                      0.7)
+                                                                  .withValues(
+                                                                      alpha:
+                                                                          0.7)
                                                               : Theme.of(
                                                                       context)
                                                                   .colorScheme
@@ -327,17 +330,17 @@ class TrackerPage extends ConsumerWidget {
                                         ? Theme.of(context)
                                             .colorScheme
                                             .primary
-                                            .withOpacity(0.15)
+                                            .withValues(alpha: 0.15)
                                         : index == 2
                                             ? Theme.of(context)
                                                 .colorScheme
                                                 .primary
-                                                .withOpacity(0.4)
+                                                .withValues(alpha: 0.4)
                                             : index == 3
                                                 ? Theme.of(context)
                                                     .colorScheme
                                                     .primary
-                                                    .withOpacity(0.7)
+                                                    .withValues(alpha: 0.7)
                                                 : Theme.of(context)
                                                     .colorScheme
                                                     .primary;
@@ -388,7 +391,7 @@ class TrackerPage extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                    color: Colors.black.withValues(alpha: 0.08),
                     blurRadius: 10,
                     spreadRadius: 1,
                     offset: const Offset(0, 2),
@@ -412,7 +415,7 @@ class TrackerPage extends ConsumerWidget {
                         backgroundColor: Theme.of(context)
                             .colorScheme
                             .error
-                            .withOpacity(0.9),
+                            .withValues(alpha: 0.9),
                       ),
                     ),
                   ),
@@ -432,7 +435,7 @@ class TrackerPage extends ConsumerWidget {
                         backgroundColor: Theme.of(context)
                             .colorScheme
                             .secondary
-                            .withOpacity(0.9),
+                            .withValues(alpha: 0.9),
                       ),
                     ),
                   ),
