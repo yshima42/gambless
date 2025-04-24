@@ -21,9 +21,10 @@ class HowFoundAppStep extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const QuizHeader(
-            questionNumber: 'Question #9',
-            question: 'このアプリをどのようにして見つけましたか？',
-            description: 'この情報は、私たちのサービスを必要とする方々により良く届けるために役立ちます。',
+            questionNumber: 'Question #3',
+            question: 'How did you find this app?',
+            description:
+                'This information helps us reach more people who need our services.',
             icon: Icons.search,
           ),
           const SizedBox(height: 32),
@@ -48,7 +49,7 @@ class HowFoundAppStep extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'ご協力ありがとうございます',
+                        'Thank you for your cooperation',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.primary,
@@ -56,7 +57,7 @@ class HowFoundAppStep extends ConsumerWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'あなたの回答は、同じ課題に直面している他の方々を支援するために役立てられます。',
+                        'Your response will help us support others facing the same challenges.',
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.white.withOpacity(0.7),

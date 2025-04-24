@@ -21,9 +21,10 @@ class GamblingStartTimeStep extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const QuizHeader(
-            questionNumber: 'Question #3',
-            question: 'ギャンブルを始めてどのくらい経ちますか？',
-            description: 'ギャンブル習慣の期間を理解することで、より適切な対策方法を提案できます。',
+            questionNumber: 'Question #4',
+            question: 'How long have you been gambling?',
+            description:
+                'Understanding the duration of your gambling habits helps us suggest appropriate countermeasures.',
             icon: Icons.access_time,
           ),
           const SizedBox(height: 32),
@@ -48,7 +49,7 @@ class GamblingStartTimeStep extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '科学的見地から',
+                        'Scientific perspective',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.primary,
@@ -56,7 +57,7 @@ class GamblingStartTimeStep extends ConsumerWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'ギャンブル習慣の長さはリカバリープロセスにおいて重要な指標です。長期間の習慣ほど脳の報酬系に深く根付いている傾向があります。',
+                        'The duration of your gambling habits is an important indicator in the recovery process. The longer the habit, the deeper it is rooted in the brain\'s reward system.',
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.white.withOpacity(0.7),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vibration/vibration.dart';
 
 import '../../data/providers/onboarding_provider.dart';
 
@@ -368,10 +369,10 @@ class _OnboardingAnalysisIndicatorState
   @override
   void initState() {
     super.initState();
-    // 分析時間を8秒に設定
+    // 分析時間を5秒に短縮
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 8),
+      duration: const Duration(seconds: 5),
     );
 
     _progressAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -385,6 +386,11 @@ class _OnboardingAnalysisIndicatorState
       setState(() {
         _progressPercent = (_progressAnimation.value * 100).round();
       });
+
+      // Calculate完了時にバイブレーション
+      if (_progressPercent == 100) {
+        _vibrate();
+      }
     });
 
     _animationController.addStatusListener((status) {
@@ -396,6 +402,15 @@ class _OnboardingAnalysisIndicatorState
 
     // アニメーション開始
     _animationController.forward();
+  }
+
+  // バイブレーション機能
+  void _vibrate() {
+    try {
+      Vibration.vibrate(duration: 300, amplitude: 128);
+    } catch (e) {
+      // バイブレーションに対応していない場合のエラーハンドリング
+    }
   }
 
   @override
@@ -447,7 +462,7 @@ class _OnboardingAnalysisIndicatorState
 
             const SizedBox(height: 40),
             Text(
-              'Calculating',
+              'Calculating Results',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -456,7 +471,7 @@ class _OnboardingAnalysisIndicatorState
             ),
             const SizedBox(height: 16),
             Text(
-              'Understanding responses',
+              'Analyzing your responses to create a personalized program',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Colors.white.withOpacity(0.7),
                   ),

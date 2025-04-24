@@ -21,9 +21,10 @@ class RecoveryGoalsStep extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const QuizHeader(
-            questionNumber: 'Question #7',
-            question: '回復の目標',
-            description: 'あなたが達成したい目標を選択してください。目標を明確にすることで、適切なプログラムを提供します。',
+            questionNumber: 'Question #8',
+            question: 'What are your recovery goals?',
+            description:
+                'Select all that apply. Having clear goals helps track your progress.',
             icon: Icons.flag,
           ),
           const SizedBox(height: 24),

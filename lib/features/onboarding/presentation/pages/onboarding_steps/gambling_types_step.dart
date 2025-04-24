@@ -21,9 +21,10 @@ class GamblingTypesStep extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const QuizHeader(
-            questionNumber: 'Question #5',
-            question: 'どのようなギャンブルをしますか？',
-            description: '最も頻繁に行うギャンブルの種類を選択してください。複数選択可能です。',
+            questionNumber: 'Question #6',
+            question: 'What types of gambling do you engage in?',
+            description:
+                'Select all that apply. This helps us understand your specific triggers.',
             icon: Icons.casino,
           ),
           const SizedBox(height: 32),

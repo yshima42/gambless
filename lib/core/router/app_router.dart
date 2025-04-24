@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -54,6 +53,8 @@ final routerProvider = Provider<GoRouter>((ref) {
 class AppRouter {
   static final router = GoRouter(
     initialLocation: '/',
+    // ルーターのリダイレクトロジックを無効化（デバッグ用）
+    // リダイレクトなしでオンボーディングページにアクセスできるようにする
     routes: [
       GoRoute(
         path: '/',

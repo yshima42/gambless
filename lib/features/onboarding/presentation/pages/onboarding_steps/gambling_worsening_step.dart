@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/providers/onboarding_provider.dart';
-import '../../../domain/models/onboarding_model.dart';
 import '../../widgets/onboarding_widgets.dart';
 
 class GamblingWorseningStep extends ConsumerWidget {
@@ -21,7 +20,7 @@ class GamblingWorseningStep extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const QuizHeader(
-            questionNumber: 'Question #4',
+            questionNumber: 'Question #5',
             question: 'Has your gambling habit been getting worse over time?',
             description:
                 'This information helps us suggest the most appropriate recovery plan.',

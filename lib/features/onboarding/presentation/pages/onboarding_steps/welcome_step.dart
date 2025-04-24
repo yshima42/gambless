@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../features/auth/presentation/pages/signup_page.dart';
 import '../../widgets/onboarding_widgets.dart';
 
-class WelcomeStep extends StatelessWidget {
+class WelcomeStep extends ConsumerWidget {
   final VoidCallback onNext;
 
   const WelcomeStep({super.key, required this.onNext});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -48,7 +50,14 @@ class WelcomeStep extends StatelessWidget {
               width: double.infinity,
               child: OnboardingButton(
                 text: 'Start Quiz',
-                onPressed: onNext,
+                onPressed: () {
+                  // アカウント作成ページに遷移
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SignupPage(onComplete: onNext),
+                    ),
+                  );
+                },
               ),
             ),
           ),

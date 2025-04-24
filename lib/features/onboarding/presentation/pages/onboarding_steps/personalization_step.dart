@@ -20,9 +20,10 @@ class PersonalizationStep extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const QuizHeader(
-            questionNumber: 'Question #8',
-            question: 'あなたについて教えてください',
-            description: '回復プログラムをカスタマイズするために、いくつか詳細情報が必要です。',
+            questionNumber: 'Question #9',
+            question: 'Tell us about yourself',
+            description:
+                'We need some details to customize your recovery program.',
             icon: Icons.person,
           ),
           const SizedBox(height: 32),
@@ -30,7 +31,7 @@ class PersonalizationStep extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'お名前（またはニックネーム）',
+                'Name (or Nickname)',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -40,7 +41,7 @@ class PersonalizationStep extends ConsumerWidget {
               TextField(
                 onChanged: (value) => onboardingNotifier.updateName(value),
                 decoration: InputDecoration(
-                  hintText: '例: 田中',
+                  hintText: 'e.g. John',
                   filled: true,
                   fillColor: Theme.of(context).colorScheme.surface,
                   border: OutlineInputBorder(
@@ -56,7 +57,7 @@ class PersonalizationStep extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                '年齢',
+                'Age',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -73,7 +74,7 @@ class PersonalizationStep extends ConsumerWidget {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<int>(
                     value: onboardingData.age == 0 ? null : onboardingData.age,
-                    hint: Text('年齢を選択',
+                    hint: Text('Select age',
                         style: TextStyle(color: Colors.white.withOpacity(0.6))),
                     dropdownColor: Theme.of(context).colorScheme.surface,
                     icon: Icon(Icons.arrow_drop_down, color: Colors.white),
@@ -116,7 +117,7 @@ class PersonalizationStep extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'パーソナライズされたプログラム',
+                            'Personalized Program',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).colorScheme.primary,
@@ -124,7 +125,7 @@ class PersonalizationStep extends ConsumerWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'あなたの情報に基づいて最適な回復プランを作成します。年齢やギャンブル習慣に合わせたアドバイスと戦略をご提供します。',
+                            'We will create an optimal recovery plan based on your information. We\'ll provide advice and strategies tailored to your age and gambling habits.',
                             style: TextStyle(
                               fontSize: 13,
                               color: Colors.white.withOpacity(0.7),
@@ -144,7 +145,7 @@ class PersonalizationStep extends ConsumerWidget {
             child: SizedBox(
               width: double.infinity,
               child: OnboardingButton(
-                text: '次へ進む',
+                text: 'Continue',
                 onPressed:
                     onboardingData.name.isNotEmpty && onboardingData.age > 0
                         ? onNext

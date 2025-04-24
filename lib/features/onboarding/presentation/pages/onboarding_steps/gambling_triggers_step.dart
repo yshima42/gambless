@@ -21,11 +21,11 @@ class GamblingTriggersStep extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const QuizHeader(
-            questionNumber: 'Question #6',
-            question: 'ギャンブルのきっかけ',
+            questionNumber: 'Question #7',
+            question: 'What triggers your gambling?',
             description:
-                'どのような状況でギャンブルをしたくなりますか？あなたの引き金となる要因を理解することは、回復への重要なステップです。',
-            icon: Icons.warning_amber,
+                'Select all that apply. Understanding your triggers is key to recovery.',
+            icon: Icons.psychology,
           ),
           const SizedBox(height: 32),
 

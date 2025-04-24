@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSVibrationUsageDescription</key>
+	<string>このアプリは進捗状況の通知のためにバイブレーションを使用します</string>
 </dict>
 </plist>

@@ -9,92 +9,137 @@ class TestimonialStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      body: Stack(
         children: [
-          const QuizHeader(
-            questionNumber: 'Question #11',
-            question: '実際の体験談',
-            description: '同じようにギャンブル依存症から立ち直った方々の体験談をご紹介します。あなたは一人ではありません。',
-            icon: Icons.groups,
-          ),
-          const SizedBox(height: 32),
-          Column(
-            children: [
-              const OnboardingTestimonial(
-                quote:
-                    'ギャンブレスのおかげで、30年間のギャンブル習慣を克服できました。今は家族との時間を大切にし、お金の管理もうまくいっています。',
-                author: '田中さん（58歳）',
-              ),
-              const SizedBox(height: 16),
-              const OnboardingTestimonial(
-                quote:
-                    '何度も諦めそうになりましたが、このアプリの科学的なアプローチと毎日のサポートのおかげで、パチンコ依存から抜け出すことができました。',
-                author: '佐藤さん（42歳）',
-              ),
-              const SizedBox(height: 16),
-              const OnboardingTestimonial(
-                quote:
-                    'スポーツベッティングで多額の負債を抱えましたが、ギャンブレスの予算管理機能と認知行動療法で借金を返済し、新しい生活を始められました。',
-                author: '鈴木さん（29歳）',
-              ),
-              const SizedBox(height: 24),
-
-              // Success stats
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Theme.of(context).dividerColor),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.verified,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '成功率',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'ギャンブレスを6ヶ月以上継続して使用したユーザーの78%が、ギャンブル習慣を大幅に改善、または完全に断ち切ることに成功しています。',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.white.withOpacity(0.7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 32),
-          Center(
-            child: SizedBox(
-              width: double.infinity,
-              child: OnboardingButton(
-                text: '次へ進む',
-                onPressed: onNext,
+          // Background gradient
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  const Color(0xFF121212),
+                  const Color(0xFF1E1E2E),
+                  Theme.of(context).colorScheme.background,
+                ],
               ),
             ),
           ),
-          const SizedBox(height: 16),
+
+          // Content
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const QuizHeader(
+                      questionNumber: 'Step #1',
+                      question: 'Real Testimonials',
+                      description:
+                          'Here are stories from people who have recovered from gambling addiction. You are not alone.',
+                      icon: Icons.groups,
+                    ),
+                    const SizedBox(height: 32),
+                    Column(
+                      children: [
+                        const OnboardingTestimonial(
+                          quote:
+                              'Thanks to Gambless, I was able to overcome my 30-year gambling habit. Now I cherish time with my family and manage my finances well.',
+                          author: 'John (58)',
+                        ),
+                        const SizedBox(height: 16),
+                        const OnboardingTestimonial(
+                          quote:
+                              'I almost gave up many times, but the scientific approach and daily support of this app helped me break free from slot machine addiction.',
+                          author: 'Michael (42)',
+                        ),
+                        const SizedBox(height: 16),
+                        const OnboardingTestimonial(
+                          quote:
+                              'I accumulated a lot of debt from sports betting, but Gambless budget management features and cognitive behavioral therapy helped me pay off my debts and start a new life.',
+                          author: 'David (29)',
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Success stats
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                                color: Theme.of(context).dividerColor),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.verified,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Success Rate',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      '78% of users who continued to use Gambless for more than 6 months succeeded in significantly improving or completely eliminating their gambling habits.',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.white.withOpacity(0.7),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+                    Center(
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: FilledButton(
+                          onPressed: onNext,
+                          style: FilledButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                          child: const Text(
+                            'Continue to Reminders',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

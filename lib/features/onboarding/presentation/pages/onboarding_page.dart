@@ -46,12 +46,16 @@ class OnboardingPage extends ConsumerWidget {
         }
 
         onboardingStepNotifier.state = currentStep + 1;
-        // Scroll to top when moving to next step
-        scrollController.animateTo(
-          0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
+
+        // スクロールコントローラーが接続されている場合のみスクロールを実行
+        if (scrollController.hasClients) {
+          // Scroll to top when moving to next step
+          scrollController.animateTo(
+            0,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
       } else {
         // Complete onboarding
         onboardingNotifier.completeOnboarding();
@@ -67,12 +71,16 @@ class OnboardingPage extends ConsumerWidget {
         }
 
         onboardingStepNotifier.state = currentStep - 1;
-        // Scroll to top when moving to previous step
-        scrollController.animateTo(
-          0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
+
+        // スクロールコントローラーが接続されている場合のみスクロールを実行
+        if (scrollController.hasClients) {
+          // Scroll to top when moving to previous step
+          scrollController.animateTo(
+            0,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
       }
     }
 
@@ -81,9 +89,8 @@ class OnboardingPage extends ConsumerWidget {
       // 分析フェーズの場合は分析インジケーターを表示
       if (onboardingPhase == 1) {
         return AnalysisStep(onNext: () {
-          // 分析が完了したら結果フェーズに移行し、結果ステップを表示
-          onboardingPhaseNotifier.state = 2;
-          onboardingStepNotifier.state = questionSteps + 1;
+          // 分析が完了したらオンボーディングも完了
+          // オンボーディングページからの遷移は AnalysisStep 内で行われる
         });
       }
 
@@ -95,19 +102,19 @@ class OnboardingPage extends ConsumerWidget {
         case 2:
           return GamblingFrequencyStep(onNext: goToNextStep);
         case 3:
-          return GamblingStartTimeStep(onNext: goToNextStep);
-        case 4:
-          return GamblingWorseningStep(onNext: goToNextStep);
-        case 5:
-          return GamblingTypesStep(onNext: goToNextStep);
-        case 6:
-          return GamblingTriggersStep(onNext: goToNextStep);
-        case 7:
-          return RecoveryGoalsStep(onNext: goToNextStep);
-        case 8:
-          return PersonalizationStep(onNext: goToNextStep);
-        case 9:
           return HowFoundAppStep(onNext: goToNextStep);
+        case 4:
+          return GamblingStartTimeStep(onNext: goToNextStep);
+        case 5:
+          return GamblingWorseningStep(onNext: goToNextStep);
+        case 6:
+          return GamblingTypesStep(onNext: goToNextStep);
+        case 7:
+          return GamblingTriggersStep(onNext: goToNextStep);
+        case 8:
+          return RecoveryGoalsStep(onNext: goToNextStep);
+        case 9:
+          return PersonalizationStep(onNext: goToNextStep);
         case 10:
           // 分析結果ステップ (質問ステップ数 + 1)
           return AnalysisResultStep(onNext: goToNextStep);
@@ -133,7 +140,7 @@ class OnboardingPage extends ConsumerWidget {
           colors: [
             const Color(0xFF121212),
             const Color(0xFF1E1E2E),
-            Theme.of(context).colorScheme.background,
+            Theme.of(context).colorScheme.surface,
           ],
         ),
       ),
