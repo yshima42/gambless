@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../data/providers/onboarding_provider.dart';
 import '../widgets/onboarding_widgets.dart' as widgets;
 import 'onboarding_steps/welcome_step.dart';
+import 'onboarding_steps/lets_go_step.dart';
 import 'onboarding_steps/gender_step.dart';
 import 'onboarding_steps/gambling_frequency_step.dart';
 import 'onboarding_steps/how_found_app_step.dart';
@@ -27,6 +28,7 @@ class OnboardingPage extends ConsumerWidget {
   // 質問フェーズのステップをリスト化
   static final List<Widget Function(VoidCallback)> _questionSteps = [
     (onNext) => WelcomeStep(onNext: onNext),
+    (onNext) => LetsGoStep(onNext: onNext),
     (onNext) => GenderStep(onNext: onNext),
     (onNext) => GamblingFrequencyStep(onNext: onNext),
     (onNext) => HowFoundAppStep(onNext: onNext),
@@ -126,8 +128,15 @@ class OnboardingPage extends ConsumerWidget {
       ),
     );
 
-    final showProgressBar =
-        onboardingPhase != 1 && currentStep != questionStepsCount + 1;
+    final showProgressBar = onboardingPhase != 1 &&
+        currentStep > 1 && // Welcome と LetsGo の後から
+        currentStep < questionStepsCount + 1; // 質問フェーズの間のみ
+
+    // 質問の進捗を計算（Welcome と LetsGo を除外）
+    final questionProgress = currentStep > 1
+        ? (currentStep - 2) /
+            (questionStepsCount - 2) // -2 は Welcome と LetsGo を除外
+        : 0.0;
 
     return Scaffold(
       body: Stack(
@@ -136,7 +145,7 @@ class OnboardingPage extends ConsumerWidget {
           SafeArea(
             child: Column(
               children: [
-                if (currentStep > 0 && showProgressBar)
+                if (showProgressBar)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Container(
@@ -146,15 +155,24 @@ class OnboardingPage extends ConsumerWidget {
                         children: [
                           BackButton(onPressed: goToPreviousStep),
                           const SizedBox(width: 16),
-                          Expanded(child: widgets.OnboardingProgressBar())
+                          Expanded(
+                            child: widgets.OnboardingProgressBar(
+                              progress: questionProgress,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
                 Expanded(
-                    child: SingleChildScrollView(
-                        controller: scrollController,
-                        child: buildCurrentStep())),
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24.0),
+                      child: buildCurrentStep(),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
