@@ -1,3 +1,5 @@
+select
+  vault.create_secret('http://api.supabase.internal:8000', 'project_url');
 -- chat_messages テーブルへのデータ挿入
 
 INSERT INTO chat_messages (content, is_user) VALUES
