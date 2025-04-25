@@ -91,7 +91,7 @@ Deno.serve(async (req) => {
       msg: { content: string; is_user: boolean },
     ) => ({
       role: msg.is_user ? "user" : "assistant",
-      content: msg.content,
+      content: `(過去の関連メッセージ) ${msg.content}`,
     }));
 
     // 8. OpenAIに送信するメッセージリストを構築
@@ -103,7 +103,8 @@ Deno.serve(async (req) => {
     const allMessages = [
       systemMessage,
       ...historyMessages,
-      ...(history || []), // フロントから送られてきた会話履歴も追加
+      { role: "system", content: "--- ここから現在の会話 ---" },
+      ...(history || []),
       { role: "user", content: message },
     ];
 
