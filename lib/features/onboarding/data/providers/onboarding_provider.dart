@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/models/onboarding_model.dart';
+import '../../domain/models/onboarding_steps.dart';
 
 part 'onboarding_provider.g.dart';
 
@@ -115,13 +116,13 @@ class OnboardingStep extends _$OnboardingStep {
 // オンボーディングの総ステップ数
 @riverpod
 int onboardingTotalSteps(Ref ref) {
-  return 10;
+  return OnboardingSteps.totalStepCount;
 }
 
-// オンボーディングの質問部分のステップ数 (Question #1-#9)
+// オンボーディングの質問部分のステップ数
 @riverpod
 int onboardingQuestionSteps(Ref ref) {
-  return 9;
+  return OnboardingSteps.questionStepCount;
 }
 
 // オンボーディングが質問段階を完了しているかどうかを確認するプロバイダー
