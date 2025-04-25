@@ -13,6 +13,27 @@ class ChatRepository {
 
   ChatRepository(this._client);
 
+  /// ユーザーメッセージをデータベースに保存する
+  Future<void> saveUserMessage(ChatMessage message) async {
+    // final userId = _client.auth.currentUser?.id;
+    // if (userId == null) {
+    //   throw Exception('User not authenticated.');
+    // }
+    try {
+      await _client.from('chat_messages').insert({
+        // 'user_id': userId, // 認証ユーザーIDを追加
+        'content': message.content, // 元のメッセージ内容に戻す
+        'is_user': true, // コメントアウトを解除！
+      });
+    } on PostgrestException catch (e) {
+      logger.e('Error saving user message to DB: ${e.message}');
+      throw Exception('Failed to save user message: ${e.message}');
+    } catch (e) {
+      logger.e('Unexpected error saving user message: $e');
+      throw Exception('Unexpected error saving message: $e');
+    }
+  }
+
   Stream<String> sendMessage(String message, List<ChatMessage> history) async* {
     // _client の情報から Functions URL と ApiKey を取得
     final functionUrl = '${_client.rest.url}/ai_chat'
@@ -56,6 +77,7 @@ class ChatRepository {
           String dataLine = line;
           // 'data: ' プレフィックスがあるか確認
           if (line.startsWith('data: ')) {
+            logger.i('dataLine: $dataLine');
             dataLine = line.substring(6).trim(); // 'data: ' と前後の空白を除去
           }
 

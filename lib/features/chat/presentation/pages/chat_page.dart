@@ -53,67 +53,74 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> _sendMessage() async {
-    final message = _messageController.text.trim();
-    if (message.isEmpty || _isLoading) return; // 送信中は何もしない
-
-    // 既存のストリームがあればキャンセル
-    await _streamSubscription?.cancel();
-    _streamSubscription = null;
+    final messageContent = _messageController.text.trim();
+    if (messageContent.isEmpty || _isLoading) return; // 送信中は何もしない
 
     setState(() {
-      _isLoading = true;
-      _messages.add(ChatMessage(
-        content: message,
-        isUser: true,
-        timestamp: DateTime.now(),
-      ));
-      // AI応答用の空メッセージを追加し、そのインデックスを保持
-      _messages.add(ChatMessage(
-        content: '', // 最初は空
-        isUser: false,
-        timestamp: DateTime.now(),
-      ));
-      _aiMessageIndex = _messages.length - 1;
-      _currentAIResponse = ''; // レスポンスをリセット
+      _isLoading = true; // まずUIをローディング状態に
     });
-
     _messageController.clear();
-    _scrollToBottom(); // 新しいメッセージ表示後にスクロール
+
+    // 1. ユーザーメッセージオブジェクトを作成
+    final userMessage = ChatMessage(
+      content: messageContent,
+      isUser: true,
+      timestamp: DateTime.now(),
+    );
 
     try {
-      const recentMessagesLength = 6;
-      // ユーザーメッセージと空のAIメッセージを除いたリストを取得
-      final previousMessages = _messages.sublist(0, _messages.length - 2);
+      // 2. ユーザーメッセージをDBに保存
+      await _chatRepository.saveUserMessage(userMessage);
 
+      // 3. DB保存成功後、ローカルリストに追加しUI更新
+      setState(() {
+        _messages.add(userMessage);
+        // AI応答用の空メッセージを追加し、そのインデックスを保持
+        _messages.add(ChatMessage(
+          content: '', // 最初は空
+          isUser: false,
+          timestamp: DateTime.now(), // AI応答開始時のタイムスタンプ
+        ));
+        _aiMessageIndex = _messages.length - 1;
+        _currentAIResponse = ''; // レスポンスをリセット
+      });
+      _scrollToBottom(); // 新しいメッセージ表示後にスクロール
+
+      // 既存のストリームがあればキャンセル
+      await _streamSubscription?.cancel();
+      _streamSubscription = null;
+
+      // 4. Edge Functionを呼び出す
+      const recentMessagesLength = 6;
+      final previousMessages = _messages.sublist(0, _messages.length - 2);
       final recentMessages = previousMessages.length > recentMessagesLength
           ? previousMessages
               .sublist(previousMessages.length - recentMessagesLength)
           : previousMessages;
 
-      logger.i('Recent Messages: $recentMessages');
+      logger.i('Recent Messages for Function: $recentMessages');
 
-      final stream = _chatRepository.sendMessage(message, recentMessages);
+      final stream =
+          _chatRepository.sendMessage(messageContent, recentMessages);
       _streamSubscription = stream.listen(
         (chunk) {
-          // 受信したチャンクを結合
           _currentAIResponse += chunk;
           setState(() {
-            // 対応するAIメッセージの content を更新
             if (_aiMessageIndex != null &&
                 _aiMessageIndex! < _messages.length) {
               _messages[_aiMessageIndex!] = _messages[_aiMessageIndex!]
                   .copyWith(content: _currentAIResponse);
             }
           });
-          _scrollToBottom(); // メッセージ更新中にスクロール
+          _scrollToBottom();
         },
         onDone: () {
           logger.i('Stream done');
           setState(() {
             _isLoading = false;
-            _aiMessageIndex = null; // 更新完了
+            _aiMessageIndex = null;
           });
-          _scrollToBottom(); // 完了後にもスクロール
+          _scrollToBottom();
         },
         onError: (e) {
           logger.e('Error receiving stream: $e');
@@ -121,40 +128,36 @@ class _ChatPageState extends State<ChatPage> {
             _isLoading = false;
             if (_aiMessageIndex != null &&
                 _aiMessageIndex! < _messages.length) {
-              // エラーメッセージを表示
               _messages[_aiMessageIndex!] = _messages[_aiMessageIndex!]
                   .copyWith(content: 'エラーが発生しました: $e');
             } else {
-              // AIメッセージが見つからない場合（稀なケース）
               _messages.add(ChatMessage(
                   content: 'エラーが発生しました: $e',
                   isUser: false,
                   timestamp: DateTime.now()));
             }
-            _aiMessageIndex = null; // 更新完了
+            _aiMessageIndex = null;
           });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('メッセージの受信中にエラーが発生しました: $e')),
           );
-          _scrollToBottom(); // エラー後にもスクロール
+          _scrollToBottom();
         },
-        cancelOnError: true, // エラー時に自動でキャンセル
+        cancelOnError: true,
       );
     } catch (e) {
-      logger.e('Error sending message: $e');
+      // DB保存失敗 or Edge Function呼び出し前のエラー
+      logger.e('Error sending/saving message: $e');
       setState(() {
         _isLoading = false;
-        // エラー発生時、プレースホルダーのAIメッセージを削除またはエラー表示に更新
-        if (_aiMessageIndex != null && _aiMessageIndex! < _messages.length) {
-          _messages.removeAt(_aiMessageIndex!); // 失敗したAIメッセージは削除
-        }
+        // ユーザーメッセージの追加やAIプレースホルダは行わない
         _aiMessageIndex = null;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('メッセージの送信に失敗しました: $e')),
+        SnackBar(content: Text('メッセージの送信または保存に失敗しました: $e')),
       );
+      // _scrollToBottom(); // 失敗時はスクロール不要な場合が多い
     }
-    // finally は stream.listen が非同期に完了するため、ここでは使わない
   }
 
   @override
