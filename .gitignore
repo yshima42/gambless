@@ -52,3 +52,5 @@ android/app/.cxx/**
 
 # env
 dart_defines/*
+
+**/android/app/google-services.json
