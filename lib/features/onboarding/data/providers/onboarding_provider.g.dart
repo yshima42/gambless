@@ -7,7 +7,7 @@ part of 'onboarding_provider.dart';
 // **************************************************************************
 
 String _$onboardingTotalStepsHash() =>
-    r'994e7bb31057348fb2c0267516a8a6754859f834';
+    r'd8fbe9b31c196b9a397b58b9b2860a644c4ad6ec';
 
 /// See also [onboardingTotalSteps].
 @ProviderFor(onboardingTotalSteps)
@@ -25,7 +25,7 @@ final onboardingTotalStepsProvider = AutoDisposeProvider<int>.internal(
 // ignore: unused_element
 typedef OnboardingTotalStepsRef = AutoDisposeProviderRef<int>;
 String _$onboardingQuestionStepsHash() =>
-    r'a754443131023c66f7aca62a2a4bcef2b30b06fb';
+    r'afe1c9f7733d310746f460eb0076e55fd9836672';
 
 /// See also [onboardingQuestionSteps].
 @ProviderFor(onboardingQuestionSteps)

@@ -45,7 +45,7 @@ class DebugButtons extends ConsumerWidget {
                   onboardingNotifier.completeOnboarding();
                 }
                 // チャットページに遷移（名前付きルートを使用）
-                router.goNamed('chat');
+                router.pushNamed('chat');
               },
               child: Icon(
                 Icons.chat_outlined,
