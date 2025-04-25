@@ -126,20 +126,30 @@ class _ChatPageState extends State<ChatPage> {
           logger.e('Error receiving stream: $e');
           setState(() {
             _isLoading = false;
+
+            // エラーメッセージをAIメッセージとして表示する代わりに
+            // 追加したプレースホルダーのAIメッセージを削除
             if (_aiMessageIndex != null &&
                 _aiMessageIndex! < _messages.length) {
-              _messages[_aiMessageIndex!] = _messages[_aiMessageIndex!]
-                  .copyWith(content: 'エラーが発生しました: $e');
-            } else {
-              _messages.add(ChatMessage(
-                  content: 'エラーが発生しました: $e',
-                  isUser: false,
-                  timestamp: DateTime.now()));
+              _messages.removeAt(_aiMessageIndex!);
             }
             _aiMessageIndex = null;
           });
+
+          // SnackBarでエラーを通知
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('メッセージの受信中にエラーが発生しました: $e')),
+            SnackBar(
+              content: Text('メッセージの受信に失敗しました。しばらく経ってからもう一度お試しください。'),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 5), // 長めの表示時間
+              action: SnackBarAction(
+                label: '閉じる',
+                textColor: Colors.white,
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+              ),
+            ),
           );
           _scrollToBottom();
         },
@@ -150,13 +160,27 @@ class _ChatPageState extends State<ChatPage> {
       logger.e('Error sending/saving message: $e');
       setState(() {
         _isLoading = false;
-        // ユーザーメッセージの追加やAIプレースホルダは行わない
+        // エラー発生時はAIメッセージを追加しない
         _aiMessageIndex = null;
       });
+
+      // SnackBarでエラーを通知（より詳細なエラーメッセージ）
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('メッセージの送信または保存に失敗しました: $e')),
+        SnackBar(
+          content: Text('メッセージの送信に失敗しました。ネットワーク接続を確認してください。'),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 5),
+          action: SnackBarAction(
+            label: '閉じる',
+            textColor: Colors.white,
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            },
+          ),
+        ),
       );
-      // _scrollToBottom(); // 失敗時はスクロール不要な場合が多い
+      // エラー後もUI更新があるのでスクロールは維持
+      _scrollToBottom();
     }
   }
 
