@@ -48,7 +48,7 @@ class _ChatPageState extends State<ChatPage> {
 
     try {
       // 直近のメッセージ2往復分
-      const recentMessagesLength = 4;
+      const recentMessagesLength = 6;
       final previousMessages = _messages.sublist(0, _messages.length - 1);
 
       // 過去のメッセージから必要な数を取得
