@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/auth/presentation/pages/auth_callback_page.dart';
 import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/onboarding/data/providers/onboarding_provider.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
@@ -29,7 +30,8 @@ GoRouter router(Ref ref) {
       if (!isOnboardingCompleted &&
           state.fullPath != '/onboarding' &&
           state.fullPath != '/welcome' &&
-          state.fullPath != '/chat') {
+          state.fullPath != '/chat' &&
+          state.fullPath != '/auth/callback') {
         return '/onboarding';
       }
 
@@ -66,6 +68,12 @@ GoRouter router(Ref ref) {
         name: 'onboarding',
         builder: (context, _) => const OnboardingPage(),
       ),
+      // Supabase認証コールバック用のルート
+      GoRoute(
+        path: '/auth/callback',
+        name: 'auth_callback',
+        builder: (context, _) => const AuthCallbackPage(),
+      ),
     ],
   );
 }
@@ -100,6 +108,12 @@ class AppRouter {
         path: '/onboarding',
         name: 'onboarding',
         builder: (context, _) => const OnboardingPage(),
+      ),
+      // Supabase認証コールバック用のルート
+      GoRoute(
+        path: '/auth/callback',
+        name: 'auth_callback',
+        builder: (context, _) => const AuthCallbackPage(),
       ),
     ],
   );
