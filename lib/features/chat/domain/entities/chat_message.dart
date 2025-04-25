@@ -13,4 +13,15 @@ class ChatMessage {
   String toString() {
     return 'ChatMessage(content: $content, isUser: $isUser, timestamp: $timestamp)';
   }
+
+  ChatMessage copyWith({
+    String? content,
+    bool? isUser,
+    DateTime? timestamp,
+  }) {
+    return ChatMessage(
+        content: content ?? this.content,
+        isUser: isUser ?? this.isUser,
+        timestamp: timestamp ?? this.timestamp);
+  }
 }
