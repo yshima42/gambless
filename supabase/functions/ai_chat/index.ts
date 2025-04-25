@@ -114,15 +114,11 @@ Deno.serve(async (req) => {
     const chatCompletion = await openai.chat.completions.create({
       messages: allMessages,
       model: OPENAI_CONSTANTS.CHAT_MODEL,
-      stream: false,
+      stream: true,
     });
 
-    const reply = chatCompletion.choices[0].message.content;
-    if (!reply) {
-      throw new Error("OpenAI did not return a reply.");
-    }
-
-    // 10. 新しいメッセージと返信をデータベースに保存
+    // 10. 新しいメッセージと返信をデータベースに保存 (ストリーミングのためコメントアウト)
+    /*
     const { error: insertError } = await supabaseClient.from("chat_messages")
       .insert([
         {
@@ -130,7 +126,7 @@ Deno.serve(async (req) => {
           is_user: true,
         },
         {
-          content: reply,
+          content: reply, // ストリーミング応答では完全な reply がここで得られない
           is_user: false,
         },
       ]);
@@ -139,10 +135,11 @@ Deno.serve(async (req) => {
       console.error("Insert Error:", insertError);
       // エラーが発生しても、ユーザーには返信する（エラー処理は改善の余地あり）
     }
+    */
 
-    // 11. AIの返信を返す
-    return new Response(reply, {
-      headers: { ...corsHeaders, "Content-Type": "text/plain" },
+    // 11. AIの返信ストリームを返す
+    return new Response(chatCompletion.toReadableStream(), {
+      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (error) {
     console.error("Error in OpenAI function:", error);
