@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/theme_provider.dart' as theme_provider;
@@ -45,7 +44,7 @@ class DebugButtons extends ConsumerWidget {
                   onboardingNotifier.completeOnboarding();
                 }
                 // チャットページに遷移（名前付きルートを使用）
-                router.goNamed('chat');
+                router.pushNamed('chat');
               },
               child: Icon(
                 Icons.chat_outlined,
