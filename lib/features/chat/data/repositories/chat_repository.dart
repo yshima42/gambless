@@ -10,22 +10,18 @@ class ChatRepository {
   // フロントじゃなくてエッジ関数側で取得したほうがいいかも
   Future<String> sendMessage(String message, List<ChatMessage> history) async {
     try {
-      final List<Map<String, String>> messages = history
+      final List<Map<String, String>> historyMessages = history
           .map((msg) => {
                 'role': msg.isUser ? 'user' : 'assistant',
                 'content': msg.content,
               })
           .toList();
 
-      messages.add({
-        'role': 'user',
-        'content': message,
-      });
-
       final response = await _client.functions.invoke(
-        'openai',
+        'ai_chat',
         body: {
-          'messages': messages.map((m) => Map<String, String>.from(m)).toList(),
+          'history': historyMessages,
+          'message': message,
         },
       );
 

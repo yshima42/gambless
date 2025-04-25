@@ -47,8 +47,18 @@ class _ChatPageState extends State<ChatPage> {
     _messageController.clear();
 
     try {
-      final response = await _chatRepository.sendMessage(message, _messages);
-      logger.i('AI Response: $response');
+      // 直近のメッセージ2往復分
+      const recentMessagesLength = 4;
+      final previousMessages = _messages.sublist(0, _messages.length - 1);
+
+      // 過去のメッセージから必要な数を取得
+      final recentMessages = previousMessages.length > recentMessagesLength
+          ? previousMessages
+              .sublist(previousMessages.length - recentMessagesLength)
+          : previousMessages;
+      logger.i('Recent Messages: $recentMessages');
+      final response =
+          await _chatRepository.sendMessage(message, recentMessages);
 
       setState(() {
         _messages.add(ChatMessage(
