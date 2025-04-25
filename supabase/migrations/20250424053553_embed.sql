@@ -98,6 +98,7 @@ select pgmq.create('embedding_jobs');
 create or replace function util.queue_embeddings()
 returns trigger
 language plpgsql
+security definer
 as $$
 declare
   content_function text = TG_ARGV[0];
@@ -249,3 +250,4 @@ begin
   limit match_count;
 end;
 $$;
+

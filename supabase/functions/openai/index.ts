@@ -124,28 +124,16 @@ Deno.serve(async (req) => {
       throw new Error("OpenAI did not return a reply.");
     }
 
-    // 10. AIの返信の埋め込みベクトルを生成
-    const replyEmbeddingResponse = await openai.embeddings.create({
-      model: "text-embedding-3-small",
-      input: reply,
-    });
-    const replyEmbedding = replyEmbeddingResponse.data[0].embedding;
-
-    // 11. 新しいメッセージと返信をデータベースに保存
-    // 注意: chat_messagesテーブルにuser_idカラムが必要です
+    // 10. 新しいメッセージと返信をデータベースに保存
     const { error: insertError } = await supabaseClient.from("chat_messages")
       .insert([
         {
-          // user_id: userId, // user_idカラムがある場合
           content: currentMessage,
           is_user: true,
-          embedding: currentEmbedding,
         },
         {
-          // user_id: userId, // user_idカラムがある場合
           content: reply,
           is_user: false,
-          embedding: replyEmbedding,
         },
       ]);
 
@@ -154,7 +142,7 @@ Deno.serve(async (req) => {
       // エラーが発生しても、ユーザーには返信する（エラー処理は改善の余地あり）
     }
 
-    // 12. AIの返信を返す
+    // 11. AIの返信を返す
     return new Response(reply, {
       headers: { ...corsHeaders, "Content-Type": "text/plain" },
     });
