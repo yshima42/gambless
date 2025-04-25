@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "388634065196",
+    "project_id": "gambless-local-e64d4",
+    "storage_bucket": "gambless-local-e64d4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388634065196:android:2fcf024a4b1941bf6c1489",
+        "android_client_info": {
+          "package_name": "com.quitmate.gambless.local"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "388634065196-98q1mf808707l4or0dk6hekaau1n0t0p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw-6y9-UAfp7O-MgoiAyX1g19Jw-pyf3k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "388634065196-98q1mf808707l4or0dk6hekaau1n0t0p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "388634065196-lougmv106m27k849bh2oh263qod153ht.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.quitmate.gambless.local"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "453580998749",
+    "project_id": "gambless-dev",
+    "storage_bucket": "gambless-dev.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:453580998749:android:b07e6420dab6dbe3b125b4",
+        "android_client_info": {
+          "package_name": "com.quitmate.gambless.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtKSkq6U01jUyRbq6s4A4mn944QPQKqkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
