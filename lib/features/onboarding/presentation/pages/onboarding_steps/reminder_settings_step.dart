@@ -73,25 +73,13 @@ class ReminderSettingsStep extends ConsumerWidget {
       {
         'time': const TimeOfDay(hour: 7, minute: 30),
         'label': '朝のルーティン',
-        'description': '朝の習慣形成におすすめ',
+        'description': '朝の習慣形成に',
         'icon': Icons.wb_sunny,
       },
       {
-        'time': const TimeOfDay(hour: 12, minute: 0),
-        'label': 'ランチタイム',
-        'description': '昼休みの小休憩におすすめ',
-        'icon': Icons.lunch_dining,
-      },
-      {
-        'time': const TimeOfDay(hour: 19, minute: 0),
+        'time': const TimeOfDay(hour: 21, minute: 00),
         'label': '夜のリラックスタイム',
-        'description': '夜の自己振り返りにおすすめ',
-        'icon': Icons.nightlight_round,
-      },
-      {
-        'time': const TimeOfDay(hour: 21, minute: 30),
-        'label': '就寝前',
-        'description': '睡眠前の落ち着いた時間におすすめ',
+        'description': '睡眠前の落ち着いた時間に',
         'icon': Icons.bedtime,
       },
     ];

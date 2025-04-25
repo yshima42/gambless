@@ -10,13 +10,17 @@ import 'shared/widgets/buttons/debug_buttons.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  const url = String.fromEnvironment('SUPABASE_URL', defaultValue: 'a');
-  const anonKey =
-      String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: 'a');
+  // SupabaseのURLとアノニマスキーを環境変数から取得
+  final url = const String.fromEnvironment('SUPABASE_URL');
+  final anonKey = const String.fromEnvironment('SUPABASE_ANON_KEY');
 
   await Supabase.initialize(
     url: url,
     anonKey: anonKey,
+    // ディープリンク認証のためのPKCE設定
+    authOptions: const FlutterAuthClientOptions(
+      authFlowType: AuthFlowType.pkce,
+    ),
   );
 
   runApp(
