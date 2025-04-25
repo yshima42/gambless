@@ -5,26 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../data/providers/onboarding_provider.dart';
 import '../../domain/models/onboarding_steps.dart';
 import '../widgets/onboarding_widgets.dart' as widgets;
-import 'onboarding_steps/welcome_step.dart';
-import 'onboarding_steps/lets_go_step.dart';
-import 'onboarding_steps/gender_step.dart';
-import 'onboarding_steps/gambling_frequency_step.dart';
-import 'onboarding_steps/how_found_app_step.dart';
-import 'onboarding_steps/gambling_start_time_step.dart';
-import 'onboarding_steps/gambling_worsening_step.dart';
-import 'onboarding_steps/gambling_types_step.dart';
-import 'onboarding_steps/gambling_triggers_step.dart';
-import 'onboarding_steps/recovery_goals_step.dart';
-import 'onboarding_steps/personalization_step.dart';
-import 'onboarding_steps/analysis_step.dart';
-import 'onboarding_steps/analysis_result_step.dart';
-import 'onboarding_steps/scientific_explanation_step.dart';
-import 'onboarding_steps/testimonial_step.dart';
-import 'onboarding_steps/reminder_settings_step.dart';
-import 'onboarding_steps/subscription_step.dart';
 
 class OnboardingPage extends ConsumerStatefulWidget {
-  const OnboardingPage({Key? key}) : super(key: key);
+  const OnboardingPage({super.key});
 
   @override
   ConsumerState<OnboardingPage> createState() =>

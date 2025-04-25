@@ -4,7 +4,6 @@ import 'package:vibration/vibration.dart';
 
 import '../../../data/providers/onboarding_provider.dart';
 import '../../widgets/onboarding_widgets.dart';
-import 'subscription_step.dart';
 
 class ReminderSettingsStep extends ConsumerWidget {
   final VoidCallback onNext;
