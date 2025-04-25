@@ -117,28 +117,93 @@ Deno.serve(async (req) => {
       stream: true,
     });
 
-    // 10. 新しいメッセージと返信をデータベースに保存 (ストリーミングのためコメントアウト)
-    /*
-    const { error: insertError } = await supabaseClient.from("chat_messages")
-      .insert([
-        {
-          content: message,
-          is_user: true,
-        },
-        {
-          content: reply, // ストリーミング応答では完全な reply がここで得られない
-          is_user: false,
-        },
-      ]);
+    // 10. ストリームを分岐させる
+    const stream = chatCompletion.toReadableStream();
+    const [stream1, stream2] = stream.tee();
 
-    if (insertError) {
-      console.error("Insert Error:", insertError);
-      // エラーが発生しても、ユーザーには返信する（エラー処理は改善の余地あり）
-    }
-    */
+    // 11. DB保存処理を非同期で実行する関数
+    //    ストリームの完了を待ってメッセージと返信をDBに保存する
+    const saveToDatabase = async () => {
+      let fullReply = "";
+      const reader = stream2.getReader();
+      const decoder = new TextDecoder();
 
-    // 11. AIの返信ストリームを返す
-    return new Response(chatCompletion.toReadableStream(), {
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (done) {
+            break;
+          }
+          if (!value || value.length === 0) {
+            continue;
+          }
+
+          const chunk = decoder.decode(value, { stream: true });
+          // ストリーミングデータの解析 (OpenAIのSSE形式に依存)
+          const lines = chunk.split("\n");
+          for (const line of lines) {
+            // 空行は無視
+            if (!line.trim()) {
+              // console.log("Skipping empty line.");
+              continue;
+            }
+
+            try {
+              // 直接JSONとしてパース
+              const parsed = JSON.parse(line);
+
+              if (parsed.choices && parsed.choices[0]?.delta?.content) {
+                const contentPiece = parsed.choices[0].delta.content;
+                fullReply += contentPiece;
+              }
+            } catch (e) {
+              console.error("Error parsing JSON line:", e, "Line:", line);
+            }
+          }
+        }
+
+        // ストリーム完了後、DBに保存 (返信が空でない場合)
+        if (fullReply.trim()) {
+          console.log("inserting to db");
+          const { error: insertError } = await supabaseClient.from(
+            "chat_messages",
+          )
+            .insert([
+              {
+                content: fullReply, // AIの完全な返信
+                is_user: false,
+              },
+            ]).select(); // select() を追加して挿入結果を確認 (任意)
+
+          if (insertError) {
+            console.error("Insert Error after stream:", insertError);
+            // 必要に応じてエラーハンドリングを追加
+          } else {
+            console.log(
+              "Messages inserted successfully after stream completion.",
+            );
+          }
+        } else {
+          console.log("Skipping DB insert for empty reply.");
+        }
+      } catch (error) {
+        console.error("Error reading stream or saving to DB:", error);
+      } finally {
+        // リーダーがロックされているか確認してから解放
+        try {
+          reader.releaseLock();
+        } catch (_) {
+          // すでに解放されている場合は無視
+        }
+      }
+    };
+
+    // DB保存処理を開始 (クライアントへのレスポンスをブロックしない)
+    saveToDatabase().catch(console.error); // 非同期処理のエラーをキャッチ
+
+    // 12. AIの返信ストリームをクライアントに返す (分岐した一方のストリームを使用)
+    return new Response(stream1, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (error) {
