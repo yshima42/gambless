@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
   }
 
   const body = await req.json();
-  console.log(body);
+  console.log("start embed \n", body);
   // Use Zod to parse and validate the request body
   const parseResult = z.array(jobSchema).safeParse(body);
 
@@ -66,7 +66,6 @@ Deno.serve(async (req) => {
     });
   }
 
-  console.log("done");
   const pendingJobs = parseResult.data;
 
   // Track jobs that completed successfully
@@ -195,6 +194,7 @@ async function processJob(job: Job) {
  */
 function catchUnload() {
   return new Promise((reject) => {
+    // deno-lint-ignore no-explicit-any
     addEventListener("beforeunload", (ev: any) => {
       reject(new Error(ev.detail?.reason));
     });

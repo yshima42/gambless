@@ -6,6 +6,7 @@
 import OpenAI from "https://deno.land/x/openai@v4.24.0/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { OPENAI_CONSTANTS } from "../utils/constants.ts";
 
 export const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -20,11 +21,10 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // 1. リクエストから現在のメッセージを取得
-    const { messages } = await req.json();
-    // messages配列の最後の要素が現在のユーザーメッセージ
-    const currentMessage = messages[messages.length - 1]?.content;
-    if (!currentMessage) {
+    // 1. リクエストから現在のメッセージと履歴を取得
+    const { history, message } = await req.json();
+
+    if (!message) {
       throw new Error("Message content is missing");
     }
 
@@ -64,25 +64,22 @@ Deno.serve(async (req) => {
 
     // 5. 現在のメッセージの埋め込みベクトルを生成
     const embeddingResponse = await openai.embeddings.create({
-      // similarity_searchと同じモデルを使用
-      model: "text-embedding-3-small",
-      input: currentMessage,
+      model: OPENAI_CONSTANTS.EMBEDDING_MODEL,
+      input: message,
     });
     const currentEmbedding = embeddingResponse.data[0].embedding;
 
-    // 6. 類似メッセージを検索 (match_messages関数を呼び出す)
-    // 注意: match_messages関数にuser_id_inputが必要な場合は、SQLと引数を修正してください
+    // 6. 類似メッセージを検索
     const { data: relevantHistory, error: rpcError } = await supabaseClient.rpc(
       "match_messages",
       {
         query_embedding: currentEmbedding,
-        similarity_threshold: 0.3, // similarity_searchの設定に合わせる
-        match_count: 10, // 取得する関連メッセージ数（調整可能）
-        // user_id_input: userId // match_messages関数がuser_idを要求する場合
+        similarity_threshold: OPENAI_CONSTANTS.SIMILARITY_THRESHOLD,
+        match_count: OPENAI_CONSTANTS.MATCH_COUNT,
       },
     );
 
-    console.log(relevantHistory);
+    console.log("relevantHistory", relevantHistory);
 
     if (rpcError) {
       console.error("RPC Error:", rpcError);
@@ -100,22 +97,22 @@ Deno.serve(async (req) => {
     // 8. OpenAIに送信するメッセージリストを構築
     const systemMessage = {
       role: "system",
-      content:
-        "あなたはギャンブル依存症の克服をサポートするAIアシスタントです。" +
-        "以下の関連する過去の会話を参考に、ユーザーの文脈を理解し、" +
-        "共感的で建設的なアドバイスを提供してください。",
+      content: OPENAI_CONSTANTS.SYSTEM_MESSAGE,
     };
 
     const allMessages = [
       systemMessage,
-      ...historyMessages.reverse(), // 新しい順で取得されるため、古い順に並び替える
-      { role: "user", content: currentMessage },
+      ...historyMessages,
+      ...(history || []), // フロントから送られてきた会話履歴も追加
+      { role: "user", content: message },
     ];
+
+    console.log("allMessages", allMessages);
 
     // 9. OpenAI Chat Completion APIを呼び出す
     const chatCompletion = await openai.chat.completions.create({
       messages: allMessages,
-      model: "gpt-3.5-turbo", // 使用するモデル
+      model: OPENAI_CONSTANTS.CHAT_MODEL,
       stream: false,
     });
 
@@ -128,7 +125,7 @@ Deno.serve(async (req) => {
     const { error: insertError } = await supabaseClient.from("chat_messages")
       .insert([
         {
-          content: currentMessage,
+          content: message,
           is_user: true,
         },
         {
@@ -165,6 +162,6 @@ Deno.serve(async (req) => {
   curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/openai' \
     --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
     --header 'Content-Type: application/json' \
-    --data '{"name":"Functions"}'
+    --data '{"message":"こんにちは", "history":[]}'
 
 */

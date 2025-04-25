@@ -8,4 +8,9 @@ class ChatMessage {
     required this.isUser,
     required this.timestamp,
   });
+
+  @override
+  String toString() {
+    return 'ChatMessage(content: $content, isUser: $isUser, timestamp: $timestamp)';
+  }
 }
