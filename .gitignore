@@ -54,3 +54,5 @@ android/app/.cxx/**
 dart_defines/*
 
 **/android/app/google-services.json
+**/ios/Flutter/Dart-Defines.xcconfig
+**/ios/Runner/GoogleService-Info.plist
