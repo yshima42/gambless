@@ -12,9 +12,10 @@ import {
   OpenAIApi,
 } from "https://esm.sh/openai@3.1.0?deps=axios@1.6.8";
 import { _OpenAiApiKey_ } from "../utils/config.ts";
+import { OPENAI_CONSTANTS } from "../utils/constants.ts";
 import { supabaseClient } from "../utils/supabase.ts";
 
-export const corsHeaders = {
+const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
@@ -49,8 +50,8 @@ serve(async (req) => {
     "match_messages",
     {
       query_embedding: embedding,
-      similarity_threshold: 0.3, // Choose an appropriate threshold for your data
-      match_count: 10, // Choose the number of matches
+      similarity_threshold: OPENAI_CONSTANTS.SIMILARITY_THRESHOLD, // Choose an appropriate threshold for your data
+      match_count: OPENAI_CONSTANTS.MATCH_COUNT, // Choose the number of matches
     },
   );
   console.log(documents);
