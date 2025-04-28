@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../domain/providers/auth_provider.dart';
 
 class SignupPage extends ConsumerWidget {
   final VoidCallback onComplete;
 
-  const SignupPage({Key? key, required this.onComplete}) : super(key: key);
+  const SignupPage({super.key, required this.onComplete});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authService = ref.watch(authServiceProvider);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -50,7 +54,7 @@ class SignupPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Become a gamble free and regain control of your life',
+                    'ギャンブルから解放され、人生をコントロールしよう',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: Colors.white70,
                         ),
@@ -58,22 +62,24 @@ class SignupPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 40),
 
-                  // Social sign-in buttons
+                  // Google Sign-inボタン
                   SocialSignInButton(
-                    text: 'Continue with Google',
+                    text: 'Googleで続ける',
                     icon: Icons.g_mobiledata,
                     backgroundColor: Colors.white,
                     textColor: Colors.black87,
-                    onPressed: () => _signInWithGoogle(context),
+                    onPressed: () => _signInWithGoogle(context, ref),
                   ),
                   const SizedBox(height: 16),
+                  // Apple Sign-inボタン
                   SocialSignInButton(
-                    text: 'Continue with Apple',
+                    text: 'Appleで続ける',
                     icon: Icons.apple,
                     backgroundColor: Colors.black,
                     textColor: Colors.white,
-                    onPressed: () => _signInWithApple(context),
+                    onPressed: () => _signInWithApple(context, ref),
                   ),
+
                   const SizedBox(height: 32),
 
                   // Skip option
@@ -83,7 +89,7 @@ class SignupPage extends ConsumerWidget {
                       context.pop();
                     },
                     child: Text(
-                      'Skip for now',
+                      '今はスキップ',
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -115,25 +121,30 @@ class SignupPage extends ConsumerWidget {
     );
   }
 
-  // Dummy implementations -- replace with real auth logic
-  Future<void> _signInWithGoogle(BuildContext context) async {
+  // Googleサインイン処理
+  Future<void> _signInWithGoogle(BuildContext context, WidgetRef ref) async {
     try {
-      await Future.delayed(const Duration(seconds: 1));
-      onComplete();
+      final authService = ref.read(authServiceProvider);
+      await authService.signInWithGoogle();
+      // 認証状態の変化はauth_providerのストリームで監視しているため、
+      // ここでの追加処理は必要ありません
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Google sign-in failed: $e')),
+        SnackBar(content: Text('Googleサインインに失敗しました: $e')),
       );
     }
   }
 
-  Future<void> _signInWithApple(BuildContext context) async {
+  // Appleサインイン処理
+  Future<void> _signInWithApple(BuildContext context, WidgetRef ref) async {
     try {
-      await Future.delayed(const Duration(seconds: 1));
-      onComplete();
+      final authService = ref.read(authServiceProvider);
+      await authService.signInWithApple();
+      // 認証状態の変化はauth_providerのストリームで監視しているため、
+      // ここでの追加処理は必要ありません
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Apple sign-in failed: $e')),
+        SnackBar(content: Text('Appleサインインに失敗しました: $e')),
       );
     }
   }
@@ -147,13 +158,13 @@ class SocialSignInButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const SocialSignInButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.icon,
     required this.backgroundColor,
     required this.textColor,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
